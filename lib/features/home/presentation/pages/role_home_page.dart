@@ -7,6 +7,7 @@ import '../../domain/models/dashboard_models.dart';
 import '../widgets/create_ticket_dialog.dart';
 import '../widgets/dashboard_metrics_grid.dart';
 import '../widgets/dashboard_tickets_card.dart';
+import '../widgets/ticket_chat_sheet.dart';
 // endregion
 
 // region Componentes Dashboard: contenedor principal por rol
@@ -24,13 +25,108 @@ class RoleHomePage extends StatefulWidget {
 
 class _RoleHomePageState extends State<RoleHomePage> {
   static const double _bottomNavHeight = 102;
+  static const List<String> _statusFilters = <String>[
+    'Todos',
+    'Abierto',
+    'En progreso',
+    'Resuelto',
+  ];
+  static const List<String> _priorityFilters = <String>[
+    'Todas',
+    'Alta',
+    'Media',
+    'Baja',
+  ];
+  static const List<String> _sortOptions = <String>[
+    'Mas recientes',
+    'Prioridad',
+    'Estado',
+  ];
 
   int _selectedTabIndex = 0;
+  String _selectedStatusFilter = 'Todos';
+  String _selectedPriorityFilter = 'Todas';
+  String _selectedSortOption = 'Mas recientes';
+  late DashboardViewData _dashboard;
+  late List<DashboardTicket> _tickets;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDashboard();
+  }
+
+  @override
+  void didUpdateWidget(covariant RoleHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.user.email != widget.user.email ||
+        oldWidget.user.role != widget.user.role) {
+      _initializeDashboard(notify: true);
+    }
+  }
+
+  void _initializeDashboard({
+    bool notify = false,
+  }) {
+    final dashboard = MockHomeRepository.instance.buildDashboard(widget.user);
+
+    if (!notify) {
+      _dashboard = dashboard;
+      _tickets = List<DashboardTicket>.from(dashboard.recentTickets);
+      return;
+    }
+
+    setState(() {
+      _dashboard = dashboard;
+      _tickets = List<DashboardTicket>.from(dashboard.recentTickets);
+    });
+  }
 
   void _selectTab(int index) {
     setState(() {
       _selectedTabIndex = index;
     });
+  }
+
+  void _selectStatusFilter(String value) {
+    setState(() {
+      _selectedStatusFilter = value;
+    });
+  }
+
+  void _selectPriorityFilter(String value) {
+    setState(() {
+      _selectedPriorityFilter = value;
+    });
+  }
+
+  void _selectSortOption(String? value) {
+    if (value == null) {
+      return;
+    }
+
+    setState(() {
+      _selectedSortOption = value;
+    });
+  }
+
+  Future<void> _openTicketFiltersSheet() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return _TicketFiltersSheet(
+          statusFilters: _statusFilters,
+          priorityFilters: _priorityFilters,
+          selectedStatus: _selectedStatusFilter,
+          selectedPriority: _selectedPriorityFilter,
+          onStatusSelected: _selectStatusFilter,
+          onPrioritySelected: _selectPriorityFilter,
+        );
+      },
+    );
   }
 
   Future<void> _openCreateTicketDialog(String actionLabel) async {
@@ -57,9 +153,141 @@ class _RoleHomePageState extends State<RoleHomePage> {
     );
   }
 
+  Future<void> _openTicketChat(DashboardTicket ticket) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => TicketChatSheet(
+        ticket: ticket,
+        currentUser: widget.user,
+        onMessagesChanged: (messages) {
+          _updateTicketMessages(
+            ticketCode: ticket.code,
+            messages: messages,
+          );
+        },
+      ),
+    );
+  }
+
+  void _updateTicketMessages({
+    required String ticketCode,
+    required List<DashboardTicketMessage> messages,
+  }) {
+    setState(() {
+      _tickets = _tickets
+          .map(
+            (ticket) => ticket.code == ticketCode
+                ? ticket.copyWith(chatMessages: messages)
+                : ticket,
+          )
+          .toList();
+    });
+  }
+
+  List<DashboardTicket> _buildVisibleTickets(List<DashboardTicket> tickets) {
+    final visibleTickets = tickets.where((ticket) {
+      final matchesStatus = _selectedStatusFilter == 'Todos' ||
+          ticket.status == _selectedStatusFilter;
+      final matchesPriority = _selectedPriorityFilter == 'Todas' ||
+          ticket.priorityLabel == _selectedPriorityFilter;
+
+      return matchesStatus && matchesPriority;
+    }).toList();
+
+    visibleTickets.sort((first, second) {
+      switch (_selectedSortOption) {
+        case 'Prioridad':
+          final priorityComparison = _priorityRank(first.priorityLabel)
+              .compareTo(_priorityRank(second.priorityLabel));
+          if (priorityComparison != 0) {
+            return priorityComparison;
+          }
+
+          return _compareByRecency(first, second);
+        case 'Estado':
+          final statusComparison =
+              _statusRank(first.status).compareTo(_statusRank(second.status));
+          if (statusComparison != 0) {
+            return statusComparison;
+          }
+
+          return _compareByRecency(first, second);
+        case 'Mas recientes':
+        default:
+          return _compareByRecency(first, second);
+      }
+    });
+
+    return visibleTickets;
+  }
+
+  int _compareByRecency(DashboardTicket first, DashboardTicket second) {
+    final firstDayRank = _dayRank(first.timeLabel);
+    final secondDayRank = _dayRank(second.timeLabel);
+
+    if (firstDayRank != secondDayRank) {
+      return firstDayRank.compareTo(secondDayRank);
+    }
+
+    return _extractMinutes(second.timeLabel).compareTo(
+      _extractMinutes(first.timeLabel),
+    );
+  }
+
+  int _dayRank(String label) {
+    if (label.startsWith('Hoy')) {
+      return 0;
+    }
+
+    if (label.startsWith('Ayer')) {
+      return 1;
+    }
+
+    return 2;
+  }
+
+  int _extractMinutes(String label) {
+    final match = RegExp(r'(\d{2}):(\d{2})').firstMatch(label);
+
+    if (match == null) {
+      return 0;
+    }
+
+    final hours = int.tryParse(match.group(1) ?? '') ?? 0;
+    final minutes = int.tryParse(match.group(2) ?? '') ?? 0;
+    return (hours * 60) + minutes;
+  }
+
+  int _priorityRank(String label) {
+    switch (label) {
+      case 'Alta':
+        return 0;
+      case 'Media':
+        return 1;
+      case 'Baja':
+        return 2;
+      default:
+        return 3;
+    }
+  }
+
+  int _statusRank(String label) {
+    switch (label) {
+      case 'Abierto':
+        return 0;
+      case 'En progreso':
+        return 1;
+      case 'Resuelto':
+        return 2;
+      default:
+        return 3;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final dashboard = MockHomeRepository.instance.buildDashboard(widget.user);
     final tabs = _buildTabs(widget.user);
     final currentTab = tabs[_selectedTabIndex];
 
@@ -114,8 +342,19 @@ class _RoleHomePageState extends State<RoleHomePage> {
                                     children: <Widget>[
                                       if (currentTab.id ==
                                           'inicio') ...<Widget>[
+                                        Text(
+                                          'Estadisticas',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge
+                                              ?.copyWith(
+                                                color: const Color(0xFF173B5E),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                        ),
+                                        const SizedBox(height: 12),
                                         DashboardMetricsGrid(
-                                          metrics: dashboard.metrics,
+                                          metrics: _dashboard.metrics,
                                           availableWidth: 360,
                                           singleColumnLayout: false,
                                         ),
@@ -129,14 +368,15 @@ class _RoleHomePageState extends State<RoleHomePage> {
                                             ? _CreateTicketButton(
                                                 onPressed: () =>
                                                     _openCreateTicketDialog(
-                                                  dashboard.floatingActionLabel,
+                                                  _dashboard
+                                                      .floatingActionLabel,
                                                 ),
-                                                tooltip: dashboard
+                                                tooltip: _dashboard
                                                     .floatingActionLabel,
                                               )
                                             : null,
                                         child: _buildTabContent(
-                                          dashboard: dashboard,
+                                          dashboard: _dashboard,
                                           tabId: currentTab.id,
                                         ),
                                       ),
@@ -173,20 +413,38 @@ class _RoleHomePageState extends State<RoleHomePage> {
     required DashboardViewData dashboard,
     required String tabId,
   }) {
+    final visibleTickets = _buildVisibleTickets(_tickets);
+
     switch (tabId) {
       case 'inicio':
-        return DashboardTicketsCard(tickets: dashboard.recentTickets);
+        return DashboardTicketsCard(
+          tickets: _tickets,
+          onOpenChat: _openTicketChat,
+        );
       case 'tickets':
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            DashboardTicketsCard(tickets: dashboard.recentTickets),
-            const SizedBox(height: 4),
+            _TicketFiltersToolbar(
+              selectedStatus: _selectedStatusFilter,
+              selectedPriority: _selectedPriorityFilter,
+              selectedSort: _selectedSortOption,
+              sortOptions: _sortOptions,
+              onOpenFilters: _openTicketFiltersSheet,
+              onSortSelected: _selectSortOption,
+            ),
+            const SizedBox(height: 14),
             Text(
-              'Las acciones de comentario y edicion quedan listas para conectarse con backend.',
+              '${visibleTickets.length} tickets visibles',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: const Color(0xFF65788F),
+                    fontWeight: FontWeight.w600,
                   ),
+            ),
+            const SizedBox(height: 10),
+            DashboardTicketsCard(
+              tickets: visibleTickets,
+              onOpenChat: _openTicketChat,
             ),
           ],
         );
@@ -204,12 +462,325 @@ class _RoleHomePageState extends State<RoleHomePage> {
       case 'perfil':
         return _ProfilePanel(
           user: widget.user,
-          metrics: dashboard.metrics,
           onLogout: () => Navigator.of(context).pop(),
         );
       default:
         return const SizedBox.shrink();
     }
+  }
+}
+// endregion
+
+// region Componentes Dashboard: filtros de tickets
+class _TicketFiltersToolbar extends StatelessWidget {
+  const _TicketFiltersToolbar({
+    required this.selectedStatus,
+    required this.selectedPriority,
+    required this.selectedSort,
+    required this.sortOptions,
+    required this.onOpenFilters,
+    required this.onSortSelected,
+  });
+
+  final String selectedStatus;
+  final String selectedPriority;
+  final String selectedSort;
+  final List<String> sortOptions;
+  final VoidCallback onOpenFilters;
+  final ValueChanged<String?> onSortSelected;
+
+  int get _activeFiltersCount {
+    var count = 0;
+
+    if (selectedStatus != 'Todos') {
+      count += 1;
+    }
+
+    if (selectedPriority != 'Todas') {
+      count += 1;
+    }
+
+    return count;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE4EBF3)),
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onOpenFilters,
+                  icon: const Icon(Icons.tune_rounded, size: 18),
+                  label: Text(
+                    _activeFiltersCount == 0
+                        ? 'Filtros'
+                        : 'Filtros ($_activeFiltersCount)',
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  value: selectedSort,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
+                  ),
+                  items: sortOptions
+                      .map(
+                        (option) => DropdownMenuItem<String>(
+                          value: option,
+                          child: Text(
+                            option,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: onSortSelected,
+                ),
+              ),
+            ],
+          ),
+          if (_activeFiltersCount > 0) ...<Widget>[
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: <Widget>[
+                if (selectedStatus != 'Todos')
+                  _ActiveFilterChip(label: 'Estado: $selectedStatus'),
+                if (selectedPriority != 'Todas')
+                  _ActiveFilterChip(label: 'Prioridad: $selectedPriority'),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _TicketFiltersSheet extends StatefulWidget {
+  const _TicketFiltersSheet({
+    required this.statusFilters,
+    required this.priorityFilters,
+    required this.selectedStatus,
+    required this.selectedPriority,
+    required this.onStatusSelected,
+    required this.onPrioritySelected,
+  });
+
+  final List<String> statusFilters;
+  final List<String> priorityFilters;
+  final String selectedStatus;
+  final String selectedPriority;
+  final ValueChanged<String> onStatusSelected;
+  final ValueChanged<String> onPrioritySelected;
+
+  @override
+  State<_TicketFiltersSheet> createState() => _TicketFiltersSheetState();
+}
+
+class _TicketFiltersSheetState extends State<_TicketFiltersSheet> {
+  late String _localSelectedStatus;
+  late String _localSelectedPriority;
+
+  @override
+  void initState() {
+    super.initState();
+    _localSelectedStatus = widget.selectedStatus;
+    _localSelectedPriority = widget.selectedPriority;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
+        decoration: const BoxDecoration(
+          color: Color(0xFFF8FBFD),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Center(
+              child: Container(
+                width: 54,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD5E0EA),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    'Filtros de tickets',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: const Color(0xFF173B5E),
+                          fontWeight: FontWeight.w800,
+                        ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            _FilterGroup(
+              label: 'Estado',
+              values: widget.statusFilters,
+              selectedValue: _localSelectedStatus,
+              onSelected: (value) {
+                setState(() {
+                  _localSelectedStatus = value;
+                });
+                widget.onStatusSelected(value);
+              },
+            ),
+            const SizedBox(height: 14),
+            _FilterGroup(
+              label: 'Prioridad',
+              values: widget.priorityFilters,
+              selectedValue: _localSelectedPriority,
+              onSelected: (value) {
+                setState(() {
+                  _localSelectedPriority = value;
+                });
+                widget.onPrioritySelected(value);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterGroup extends StatelessWidget {
+  const _FilterGroup({
+    required this.label,
+    required this.values,
+    required this.selectedValue,
+    required this.onSelected,
+  });
+
+  final String label;
+  final List<String> values;
+  final String selectedValue;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: const Color(0xFF6A7C92),
+                fontWeight: FontWeight.w700,
+              ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: values
+              .map(
+                (value) => ChoiceChip(
+                  label: Text(value),
+                  selected: value == selectedValue,
+                  onSelected: (_) => onSelected(value),
+                  backgroundColor: const Color(0xFFF2F6FA),
+                  selectedColor: const Color(0xFFE4F0FF),
+                  surfaceTintColor: Colors.transparent,
+                  pressElevation: 0,
+                  shadowColor: Colors.transparent,
+                  side: BorderSide(
+                    color: value == selectedValue
+                        ? const Color(0xFF1F6BFF)
+                        : Colors.transparent,
+                  ),
+                  color: WidgetStateProperty.resolveWith<Color?>(
+                    (states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return const Color(0xFFE4F0FF);
+                      }
+
+                      return const Color(0xFFF2F6FA);
+                    },
+                  ),
+                  labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: value == selectedValue
+                            ? const Color(0xFF1B4F85)
+                            : const Color(0xFF5F738A),
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActiveFilterChip extends StatelessWidget {
+  const _ActiveFilterChip({
+    required this.label,
+  });
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF3FF),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: const Color(0xFF1B4F85),
+              fontWeight: FontWeight.w700,
+            ),
+      ),
+    );
   }
 }
 // endregion
@@ -531,12 +1102,10 @@ class _SupportGroupCard extends StatelessWidget {
 class _ProfilePanel extends StatelessWidget {
   const _ProfilePanel({
     required this.user,
-    required this.metrics,
     required this.onLogout,
   });
 
   final AuthUser user;
-  final List<DashboardMetric> metrics;
   final VoidCallback onLogout;
 
   @override
@@ -588,39 +1157,6 @@ class _ProfilePanel extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEFF6FB),
-            borderRadius: BorderRadius.circular(22),
-          ),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: metrics
-                .map(
-                  (metric) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      '${metric.title}: ${metric.value}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: const Color(0xFF173B5E),
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
         const SizedBox(height: 18),
         SizedBox(
           width: double.infinity,
@@ -718,8 +1254,7 @@ List<_DashboardTab> _buildTabs(AuthUser user) {
       title: 'Tickets - Seguimiento',
       subtitle: 'Vista compacta de incidencias abiertas y resueltas.',
       sectionTitle: 'Mis tickets',
-      sectionSubtitle:
-          'Lista de trabajo adaptada a la distribucion solicitada.',
+      sectionSubtitle: '',
     ),
     _DashboardTab(
       id: 'grupos',

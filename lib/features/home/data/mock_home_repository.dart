@@ -153,6 +153,30 @@ class MockHomeRepository {
             priorityColor: Color(0xFFC0392B),
             priorityBackgroundColor: Color(0xFFFFE9E6),
             accentColor: Color(0xFF2F80ED),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'inc-1048-1',
+                authorName: 'Ana Perez',
+                authorRoleLabel: 'Cliente',
+                body: 'El portal devuelve credenciales invalidas aunque la clave es correcta.',
+                timeLabel: 'Hoy, 09:12',
+              ),
+              DashboardTicketMessage(
+                id: 'inc-1048-2',
+                authorName: 'Equipo Soporte',
+                authorRoleLabel: 'Tecnico',
+                body: 'Estamos revisando logs de autenticacion y bloqueo de sesiones.',
+                timeLabel: 'Hoy, 09:18',
+              ),
+              DashboardTicketMessage(
+                id: 'inc-1048-3',
+                authorName: 'Ana Perez',
+                authorRoleLabel: 'Cliente',
+                body: 'Confirmo que tambien falla desde otro navegador.',
+                timeLabel: 'Hoy, 09:24',
+                parentMessageId: 'inc-1048-2',
+              ),
+            ],
           ),
           DashboardTicket(
             code: '#INC-1047',
@@ -166,6 +190,22 @@ class MockHomeRepository {
             priorityColor: Color(0xFF9B6B00),
             priorityBackgroundColor: Color(0xFFFFF3D6),
             accentColor: Color(0xFFFFAF1A),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'inc-1047-1',
+                authorName: 'Juan Garcia',
+                authorRoleLabel: 'Cliente',
+                body: 'La barra de actualizacion se queda en 73% y no avanza.',
+                timeLabel: 'Hoy, 08:47',
+              ),
+              DashboardTicketMessage(
+                id: 'inc-1047-2',
+                authorName: 'Lucia Torres',
+                authorRoleLabel: 'Tecnico',
+                body: 'He relanzado el despliegue y estoy validando espacio en disco.',
+                timeLabel: 'Hoy, 09:01',
+              ),
+            ],
           ),
           DashboardTicket(
             code: '#INC-1046',
@@ -179,6 +219,22 @@ class MockHomeRepository {
             priorityColor: Color(0xFF2D6A4F),
             priorityBackgroundColor: Color(0xFFE6F6EC),
             accentColor: Color(0xFF20B46A),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'inc-1046-1',
+                authorName: 'Laura Sanchez',
+                authorRoleLabel: 'Cliente',
+                body: 'Necesito un teclado adicional para el puesto de recepcion.',
+                timeLabel: 'Ayer, 15:40',
+              ),
+              DashboardTicketMessage(
+                id: 'inc-1046-2',
+                authorName: 'Mesa de ayuda',
+                authorRoleLabel: 'Tecnico',
+                body: 'Pedido registrado y entregado esta misma tarde.',
+                timeLabel: 'Ayer, 17:20',
+              ),
+            ],
           ),
         ];
       case UserRole.admin:
@@ -195,6 +251,22 @@ class MockHomeRepository {
             priorityColor: Color(0xFFC0392B),
             priorityBackgroundColor: Color(0xFFFFE9E6),
             accentColor: Color(0xFFEB5757),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'adm-209-1',
+                authorName: 'Sistema',
+                authorRoleLabel: 'Monitor',
+                body: 'Se ha alcanzado el limite SLA sin tecnico asignado.',
+                timeLabel: 'Hoy, 10:05',
+              ),
+              DashboardTicketMessage(
+                id: 'adm-209-2',
+                authorName: 'Marta Ruiz',
+                authorRoleLabel: 'Admin',
+                body: 'Reviso disponibilidad del equipo de guardia para reasignar.',
+                timeLabel: 'Hoy, 10:11',
+              ),
+            ],
           ),
           DashboardTicket(
             code: '#ADM-208',
@@ -208,6 +280,23 @@ class MockHomeRepository {
             priorityColor: Color(0xFF9B6B00),
             priorityBackgroundColor: Color(0xFFFFF3D6),
             accentColor: Color(0xFF2D9CDB),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'adm-208-1',
+                authorName: 'Marta Ruiz',
+                authorRoleLabel: 'Admin',
+                body: 'Hay que validar accesos heredados del grupo comercial.',
+                timeLabel: 'Hoy, 08:20',
+              ),
+              DashboardTicketMessage(
+                id: 'adm-208-2',
+                authorName: 'Daniel Soto',
+                authorRoleLabel: 'Tecnico',
+                body: 'He detectado dos usuarios con privilegios redundantes.',
+                timeLabel: 'Hoy, 08:41',
+                parentMessageId: 'adm-208-1',
+              ),
+            ],
           ),
           DashboardTicket(
             code: '#ADM-207',
@@ -221,6 +310,15 @@ class MockHomeRepository {
             priorityColor: Color(0xFF2D6A4F),
             priorityBackgroundColor: Color(0xFFE6F6EC),
             accentColor: Color(0xFF20B46A),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'adm-207-1',
+                authorName: 'Backoffice',
+                authorRoleLabel: 'Sistema',
+                body: 'Informe diario exportado y publicado en el panel.',
+                timeLabel: 'Ayer, 18:00',
+              ),
+            ],
           ),
         ];
       case UserRole.cliente:
@@ -237,6 +335,22 @@ class MockHomeRepository {
             priorityColor: Color(0xFFC0392B),
             priorityBackgroundColor: Color(0xFFFFE9E6),
             accentColor: Color(0xFFEB5757),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'cli-731-1',
+                authorName: 'Carlos Romero',
+                authorRoleLabel: 'Cliente',
+                body: 'Al adjuntar la factura el formulario se reinicia y pierde el archivo.',
+                timeLabel: 'Hoy, 09:31',
+              ),
+              DashboardTicketMessage(
+                id: 'cli-731-2',
+                authorName: 'Soporte tecnico',
+                authorRoleLabel: 'Tecnico',
+                body: 'Necesito saber si ocurre con PDF o tambien con imagenes.',
+                timeLabel: 'Hoy, 09:37',
+              ),
+            ],
           ),
           DashboardTicket(
             code: '#CLI-728',
@@ -250,6 +364,23 @@ class MockHomeRepository {
             priorityColor: Color(0xFF9B6B00),
             priorityBackgroundColor: Color(0xFFFFF3D6),
             accentColor: Color(0xFF2D9CDB),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'cli-728-1',
+                authorName: 'Soporte tecnico',
+                authorRoleLabel: 'Tecnico',
+                body: 'Hemos reproducido el error al generar el PDF de abril.',
+                timeLabel: 'Hoy, 08:46',
+              ),
+              DashboardTicketMessage(
+                id: 'cli-728-2',
+                authorName: 'Carlos Romero',
+                authorRoleLabel: 'Cliente',
+                body: 'Perfecto, me sirve una exportacion provisional en Excel.',
+                timeLabel: 'Hoy, 09:02',
+                parentMessageId: 'cli-728-1',
+              ),
+            ],
           ),
           DashboardTicket(
             code: '#CLI-720',
@@ -263,6 +394,15 @@ class MockHomeRepository {
             priorityColor: Color(0xFF2D6A4F),
             priorityBackgroundColor: Color(0xFFE6F6EC),
             accentColor: Color(0xFF20B46A),
+            chatMessages: <DashboardTicketMessage>[
+              DashboardTicketMessage(
+                id: 'cli-720-1',
+                authorName: 'Laura Sanchez',
+                authorRoleLabel: 'Tecnico',
+                body: 'El nuevo acceso ya esta activo y probado correctamente.',
+                timeLabel: 'Ayer, 16:10',
+              ),
+            ],
           ),
         ];
     }

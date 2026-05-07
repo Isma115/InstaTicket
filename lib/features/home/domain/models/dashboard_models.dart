@@ -30,6 +30,7 @@ class DashboardTicket {
     required this.priorityColor,
     required this.priorityBackgroundColor,
     required this.accentColor,
+    required this.chatMessages,
   });
 
   final String code;
@@ -43,6 +44,48 @@ class DashboardTicket {
   final Color priorityColor;
   final Color priorityBackgroundColor;
   final Color accentColor;
+  final List<DashboardTicketMessage> chatMessages;
+
+  int get messageCount => chatMessages.length;
+
+  DashboardTicket copyWith({
+    List<DashboardTicketMessage>? chatMessages,
+  }) {
+    return DashboardTicket(
+      code: code,
+      title: title,
+      status: status,
+      timeLabel: timeLabel,
+      reporter: reporter,
+      priorityLabel: priorityLabel,
+      statusColor: statusColor,
+      statusBackgroundColor: statusBackgroundColor,
+      priorityColor: priorityColor,
+      priorityBackgroundColor: priorityBackgroundColor,
+      accentColor: accentColor,
+      chatMessages: chatMessages ?? this.chatMessages,
+    );
+  }
+}
+
+class DashboardTicketMessage {
+  const DashboardTicketMessage({
+    required this.id,
+    required this.authorName,
+    required this.authorRoleLabel,
+    required this.body,
+    required this.timeLabel,
+    this.parentMessageId,
+    this.isCurrentUser = false,
+  });
+
+  final String id;
+  final String authorName;
+  final String authorRoleLabel;
+  final String body;
+  final String timeLabel;
+  final String? parentMessageId;
+  final bool isCurrentUser;
 }
 
 class DashboardMenuEntry {
