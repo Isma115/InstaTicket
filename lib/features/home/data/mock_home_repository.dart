@@ -1,0 +1,327 @@
+// region Lógica Dashboard: repositorio mock para métricas y tickets
+import 'package:flutter/material.dart';
+
+import '../../../core/models/auth_user.dart';
+import '../../../core/models/user_role.dart';
+import '../domain/models/dashboard_models.dart';
+
+class MockHomeRepository {
+  MockHomeRepository._();
+
+  static final MockHomeRepository instance = MockHomeRepository._();
+
+  DashboardViewData buildDashboard(AuthUser user) {
+    return DashboardViewData(
+      metrics: _metricsByRole(user.role),
+      recentTickets: _ticketsByRole(user.role),
+      menuEntries: const <DashboardMenuEntry>[
+        DashboardMenuEntry(
+          label: 'Inicio',
+          icon: Icons.home_rounded,
+          highlighted: true,
+        ),
+        DashboardMenuEntry(
+          label: 'Tickets',
+          icon: Icons.inventory_2_outlined,
+        ),
+        DashboardMenuEntry(
+          label: 'Grupos',
+          icon: Icons.groups_2_outlined,
+        ),
+        DashboardMenuEntry(
+          label: 'Perfil',
+          icon: Icons.person_outline_rounded,
+        ),
+      ],
+      supportGroups: _groupsByRole(user.role),
+      floatingActionLabel:
+          user.role == UserRole.cliente ? 'Nueva incidencia' : 'Nuevo ticket',
+    );
+  }
+
+  List<DashboardMetric> _metricsByRole(UserRole role) {
+    switch (role) {
+      case UserRole.tecnico:
+        return const <DashboardMetric>[
+          DashboardMetric(
+            title: 'Abiertos',
+            value: '28',
+            icon: Icons.folder_outlined,
+            iconColor: Color(0xFF1F6BFF),
+            iconBackgroundColor: Color(0xFFEDF4FF),
+          ),
+          DashboardMetric(
+            title: 'En progreso',
+            value: '15',
+            icon: Icons.access_time_outlined,
+            iconColor: Color(0xFFFFAF1A),
+            iconBackgroundColor: Color(0xFFFFF7E7),
+          ),
+          DashboardMetric(
+            title: 'Resueltos',
+            value: '56',
+            icon: Icons.check_outlined,
+            iconColor: Color(0xFF20B46A),
+            iconBackgroundColor: Color(0xFFEEFBF3),
+          ),
+          DashboardMetric(
+            title: 'Total tickets',
+            value: '99',
+            icon: Icons.bar_chart_outlined,
+            iconColor: Color(0xFF6B5AF3),
+            iconBackgroundColor: Color(0xFFF3F0FF),
+          ),
+        ];
+      case UserRole.admin:
+        return const <DashboardMetric>[
+          DashboardMetric(
+            title: 'Abiertos',
+            value: '41',
+            icon: Icons.folder_outlined,
+            iconColor: Color(0xFF1F6BFF),
+            iconBackgroundColor: Color(0xFFEDF4FF),
+          ),
+          DashboardMetric(
+            title: 'En progreso',
+            value: '19',
+            icon: Icons.access_time_outlined,
+            iconColor: Color(0xFFFFAF1A),
+            iconBackgroundColor: Color(0xFFFFF7E7),
+          ),
+          DashboardMetric(
+            title: 'Resueltos',
+            value: '83',
+            icon: Icons.check_outlined,
+            iconColor: Color(0xFF20B46A),
+            iconBackgroundColor: Color(0xFFEEFBF3),
+          ),
+          DashboardMetric(
+            title: 'Total tickets',
+            value: '143',
+            icon: Icons.bar_chart_outlined,
+            iconColor: Color(0xFF6B5AF3),
+            iconBackgroundColor: Color(0xFFF3F0FF),
+          ),
+        ];
+      case UserRole.cliente:
+        return const <DashboardMetric>[
+          DashboardMetric(
+            title: 'Abiertos',
+            value: '3',
+            icon: Icons.folder_outlined,
+            iconColor: Color(0xFF1F6BFF),
+            iconBackgroundColor: Color(0xFFEDF4FF),
+          ),
+          DashboardMetric(
+            title: 'En progreso',
+            value: '1',
+            icon: Icons.access_time_outlined,
+            iconColor: Color(0xFFFFAF1A),
+            iconBackgroundColor: Color(0xFFFFF7E7),
+          ),
+          DashboardMetric(
+            title: 'Resueltos',
+            value: '9',
+            icon: Icons.check_outlined,
+            iconColor: Color(0xFF20B46A),
+            iconBackgroundColor: Color(0xFFEEFBF3),
+          ),
+          DashboardMetric(
+            title: 'Total tickets',
+            value: '13',
+            icon: Icons.bar_chart_outlined,
+            iconColor: Color(0xFF6B5AF3),
+            iconBackgroundColor: Color(0xFFF3F0FF),
+          ),
+        ];
+    }
+  }
+
+  List<DashboardTicket> _ticketsByRole(UserRole role) {
+    switch (role) {
+      case UserRole.tecnico:
+        return const <DashboardTicket>[
+          DashboardTicket(
+            code: '#INC-1048',
+            title: 'Error al iniciar sesión en el portal',
+            status: 'Abierto',
+            timeLabel: 'Hoy, 09:10',
+            reporter: 'Ana Perez',
+            priorityLabel: 'Alta',
+            statusColor: Color(0xFF1F6BFF),
+            statusBackgroundColor: Color(0xFFEEF5FF),
+            priorityColor: Color(0xFFC0392B),
+            priorityBackgroundColor: Color(0xFFFFE9E6),
+            accentColor: Color(0xFF2F80ED),
+          ),
+          DashboardTicket(
+            code: '#INC-1047',
+            title: 'Actualizacion de software detenida',
+            status: 'En progreso',
+            timeLabel: 'Hoy, 08:45',
+            reporter: 'Juan Garcia',
+            priorityLabel: 'Media',
+            statusColor: Color(0xFFFFAF1A),
+            statusBackgroundColor: Color(0xFFFFF7E8),
+            priorityColor: Color(0xFF9B6B00),
+            priorityBackgroundColor: Color(0xFFFFF3D6),
+            accentColor: Color(0xFFFFAF1A),
+          ),
+          DashboardTicket(
+            code: '#INC-1046',
+            title: 'Solicitud de nuevo periférico',
+            status: 'Resuelto',
+            timeLabel: 'Ayer, 17:20',
+            reporter: 'Laura Sanchez',
+            priorityLabel: 'Baja',
+            statusColor: Color(0xFF20B46A),
+            statusBackgroundColor: Color(0xFFEEFBF3),
+            priorityColor: Color(0xFF2D6A4F),
+            priorityBackgroundColor: Color(0xFFE6F6EC),
+            accentColor: Color(0xFF20B46A),
+          ),
+        ];
+      case UserRole.admin:
+        return const <DashboardTicket>[
+          DashboardTicket(
+            code: '#ADM-209',
+            title: 'Escalado SLA sin responsable asignado',
+            status: 'Abierto',
+            timeLabel: 'Hoy, 10:05',
+            reporter: 'Sistema',
+            priorityLabel: 'Alta',
+            statusColor: Color(0xFF1F6BFF),
+            statusBackgroundColor: Color(0xFFEEF5FF),
+            priorityColor: Color(0xFFC0392B),
+            priorityBackgroundColor: Color(0xFFFFE9E6),
+            accentColor: Color(0xFFEB5757),
+          ),
+          DashboardTicket(
+            code: '#ADM-208',
+            title: 'Revisión de permisos por grupo',
+            status: 'En progreso',
+            timeLabel: 'Hoy, 08:15',
+            reporter: 'Marta Ruiz',
+            priorityLabel: 'Media',
+            statusColor: Color(0xFFFFAF1A),
+            statusBackgroundColor: Color(0xFFFFF7E8),
+            priorityColor: Color(0xFF9B6B00),
+            priorityBackgroundColor: Color(0xFFFFF3D6),
+            accentColor: Color(0xFF2D9CDB),
+          ),
+          DashboardTicket(
+            code: '#ADM-207',
+            title: 'Consolidado diario de incidencias generado',
+            status: 'Resuelto',
+            timeLabel: 'Ayer, 18:00',
+            reporter: 'Backoffice',
+            priorityLabel: 'Baja',
+            statusColor: Color(0xFF20B46A),
+            statusBackgroundColor: Color(0xFFEEFBF3),
+            priorityColor: Color(0xFF2D6A4F),
+            priorityBackgroundColor: Color(0xFFE6F6EC),
+            accentColor: Color(0xFF20B46A),
+          ),
+        ];
+      case UserRole.cliente:
+        return const <DashboardTicket>[
+          DashboardTicket(
+            code: '#CLI-731',
+            title: 'No puedo adjuntar una factura al ticket',
+            status: 'Abierto',
+            timeLabel: 'Hoy, 09:30',
+            reporter: 'Carlos Romero',
+            priorityLabel: 'Alta',
+            statusColor: Color(0xFF1F6BFF),
+            statusBackgroundColor: Color(0xFFEEF5FF),
+            priorityColor: Color(0xFFC0392B),
+            priorityBackgroundColor: Color(0xFFFFE9E6),
+            accentColor: Color(0xFFEB5757),
+          ),
+          DashboardTicket(
+            code: '#CLI-728',
+            title: 'Error al descargar el informe mensual',
+            status: 'En progreso',
+            timeLabel: 'Hoy, 08:45',
+            reporter: 'Soporte tecnico',
+            priorityLabel: 'Media',
+            statusColor: Color(0xFFFFAF1A),
+            statusBackgroundColor: Color(0xFFFFF7E8),
+            priorityColor: Color(0xFF9B6B00),
+            priorityBackgroundColor: Color(0xFFFFF3D6),
+            accentColor: Color(0xFF2D9CDB),
+          ),
+          DashboardTicket(
+            code: '#CLI-720',
+            title: 'Actualizacion de acceso completada',
+            status: 'Resuelto',
+            timeLabel: 'Ayer, 16:10',
+            reporter: 'Laura Sanchez',
+            priorityLabel: 'Baja',
+            statusColor: Color(0xFF20B46A),
+            statusBackgroundColor: Color(0xFFEEFBF3),
+            priorityColor: Color(0xFF2D6A4F),
+            priorityBackgroundColor: Color(0xFFE6F6EC),
+            accentColor: Color(0xFF20B46A),
+          ),
+        ];
+    }
+  }
+
+  List<DashboardSupportGroup> _groupsByRole(UserRole role) {
+    switch (role) {
+      case UserRole.tecnico:
+        return const <DashboardSupportGroup>[
+          DashboardSupportGroup(
+            title: 'Mesa de ayuda',
+            subtitle: 'Incidencias de primer nivel y acceso',
+            membersLabel: '12 tecnicos activos',
+            icon: Icons.support_agent_rounded,
+            accentColor: Color(0xFF2D9CDB),
+          ),
+          DashboardSupportGroup(
+            title: 'Sistemas',
+            subtitle: 'Servidores, redes y equipos internos',
+            membersLabel: '8 especialistas',
+            icon: Icons.dns_rounded,
+            accentColor: Color(0xFF20B46A),
+          ),
+        ];
+      case UserRole.admin:
+        return const <DashboardSupportGroup>[
+          DashboardSupportGroup(
+            title: 'Operaciones',
+            subtitle: 'Seguimiento de SLA y coordinacion',
+            membersLabel: '5 responsables',
+            icon: Icons.query_stats_rounded,
+            accentColor: Color(0xFF2457F5),
+          ),
+          DashboardSupportGroup(
+            title: 'Permisos',
+            subtitle: 'Accesos, auditorias y compliance',
+            membersLabel: '4 administradores',
+            icon: Icons.admin_panel_settings_rounded,
+            accentColor: Color(0xFFFFAF1A),
+          ),
+        ];
+      case UserRole.cliente:
+        return const <DashboardSupportGroup>[
+          DashboardSupportGroup(
+            title: 'Atencion general',
+            subtitle: 'Consultas abiertas y seguimiento diario',
+            membersLabel: 'Disponible de 08:00 a 18:00',
+            icon: Icons.headset_mic_rounded,
+            accentColor: Color(0xFF2457F5),
+          ),
+          DashboardSupportGroup(
+            title: 'Facturacion',
+            subtitle: 'Documentacion y validacion de cargos',
+            membersLabel: 'Respuesta media: 2 h',
+            icon: Icons.receipt_long_rounded,
+            accentColor: Color(0xFF20B46A),
+          ),
+        ];
+    }
+  }
+}
+// endregion
