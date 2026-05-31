@@ -5,17 +5,25 @@ import '../../../../core/models/auth_user.dart';
 import '../../../../core/models/user_role.dart';
 // endregion
 
-// region Lógica Dashboard: modelo mock del popup de crear ticket
+// region Lógica Dashboard: modelo del popup de crear ticket
 class CreateTicketDraft {
   const CreateTicketDraft({
     required this.title,
+    required this.description,
     required this.category,
     required this.priority,
+    required this.assetReference,
+    required this.notifyByEmail,
+    required this.needsFollowUp,
   });
 
   final String title;
+  final String description;
   final String category;
   final String priority;
+  final String assetReference;
+  final bool notifyByEmail;
+  final bool needsFollowUp;
 }
 // endregion
 
@@ -51,7 +59,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
     switch (widget.user.role) {
       case UserRole.tecnico:
         return const <String>[
-          'Hardware',
+          'Equipo',
           'Software',
           'Accesos',
           'Red',
@@ -128,8 +136,12 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
     Navigator.of(context).pop(
       CreateTicketDraft(
         title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
         category: _selectedCategory,
         priority: _selectedPriority,
+        assetReference: _assetController.text.trim(),
+        notifyByEmail: _notifyByEmail,
+        needsFollowUp: _needsFollowUp,
       ),
     );
   }
@@ -219,7 +231,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
                   _ResponsiveFields(
                     compactLayout: compactLayout,
                     leftChild: TextFormField(
-                      initialValue: widget.user.name,
+                      initialValue: widget.user.displayName,
                       decoration: const InputDecoration(
                         labelText: 'Solicitante',
                       ),
@@ -277,7 +289,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
                     contentPadding: EdgeInsets.zero,
                     title: const Text('Notificar por email al crear el ticket'),
                     subtitle: const Text(
-                      'Accion simulada para la demo frontend.',
+                      'Guardará esta preferencia en el ticket de backend.',
                     ),
                     activeColor: const Color(0xFF2457F5),
                     onChanged: (value) {
@@ -291,7 +303,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
                     contentPadding: EdgeInsets.zero,
                     title: const Text('Marcar seguimiento prioritario'),
                     subtitle: const Text(
-                      'Permite destacar la incidencia dentro del flujo mock.',
+                      'Marca el ticket para seguimiento prioritario.',
                     ),
                     activeColor: const Color(0xFF2457F5),
                     onChanged: (value) {
@@ -503,7 +515,7 @@ class _PrioritySelector extends StatelessWidget {
 }
 // endregion
 
-// region Componentes Dashboard: tarjeta mock de adjuntos del popup de crear ticket
+// region Componentes Dashboard: tarjeta de adjuntos del popup de crear ticket
 class _AttachmentsPlaceholder extends StatelessWidget {
   const _AttachmentsPlaceholder();
 

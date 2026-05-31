@@ -7,6 +7,7 @@ class LoginForm extends StatefulWidget {
     required this.emailController,
     required this.passwordController,
     required this.onSubmit,
+    this.isSubmitting = false,
     super.key,
   });
 
@@ -14,6 +15,7 @@ class LoginForm extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final VoidCallback onSubmit;
+  final bool isSubmitting;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -88,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 10),
           Align(
             child: Text(
-              'Accede con una cuenta demo para\nentrar al panel principal.',
+              'Accede con tu cuenta para\nentrar al panel principal.',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge?.copyWith(
                 height: 1.55,
@@ -108,6 +110,7 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             controller: widget.emailController,
             keyboardType: TextInputType.emailAddress,
+            enabled: !widget.isSubmitting,
             decoration: _buildDecoration(
               hintText: 'ejemplo@empresa.com',
               prefixIcon: Icons.mail_outline,
@@ -126,6 +129,7 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             controller: widget.passwordController,
             obscureText: _obscurePassword,
+            enabled: !widget.isSubmitting,
             decoration: _buildDecoration(
               hintText: 'Introduce tu contraseña',
               prefixIcon: Icons.lock_outline,
@@ -149,7 +153,7 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-              onPressed: widget.onSubmit,
+              onPressed: widget.isSubmitting ? null : widget.onSubmit,
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFF2F7DF6),
                 foregroundColor: Colors.white,
@@ -162,7 +166,16 @@ class _LoginFormState extends State<LoginForm> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              child: const Text('Entrar al panel'),
+              child: widget.isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text('Entrar al panel'),
             ),
           ),
         ],

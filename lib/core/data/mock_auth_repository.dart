@@ -11,22 +11,30 @@ class MockAuthRepository {
 
   final List<AuthUser> _users = <AuthUser>[
     const AuthUser(
-      name: 'Laura Soporte',
+      name: 'Laura',
+      lastName: 'Soporte',
       email: 'tecnico@instaticket.dev',
       password: 'Tecnico123!',
       role: UserRole.tecnico,
+      photoUrl: 'https://i.pravatar.cc/300?img=32',
+      twoFactorEnabled: true,
     ),
     const AuthUser(
-      name: 'Mario Admin',
+      name: 'Mario',
+      lastName: 'Admin',
       email: 'admin@instaticket.dev',
       password: 'Admin123!',
       role: UserRole.admin,
+      photoUrl: 'https://i.pravatar.cc/300?img=53',
+      twoFactorEnabled: true,
     ),
     const AuthUser(
-      name: 'Clara Cliente',
+      name: 'Clara',
+      lastName: 'Cliente',
       email: 'cliente@instaticket.dev',
       password: 'Cliente123!',
       role: UserRole.cliente,
+      photoUrl: 'https://i.pravatar.cc/300?img=47',
     ),
   ];
 

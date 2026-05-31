@@ -19,7 +19,7 @@ class DashboardMetric {
 
 class DashboardTicket {
   const DashboardTicket({
-    required this.code,
+    required this.id,
     required this.title,
     required this.status,
     required this.timeLabel,
@@ -31,9 +31,10 @@ class DashboardTicket {
     required this.priorityBackgroundColor,
     required this.accentColor,
     required this.chatMessages,
+    this.persistedMessageCount = 0,
   });
 
-  final String code;
+  final String id;
   final String title;
   final String status;
   final String timeLabel;
@@ -45,25 +46,42 @@ class DashboardTicket {
   final Color priorityBackgroundColor;
   final Color accentColor;
   final List<DashboardTicketMessage> chatMessages;
+  final int persistedMessageCount;
 
-  int get messageCount => chatMessages.length;
+  int get messageCount =>
+      chatMessages.isNotEmpty ? chatMessages.length : persistedMessageCount;
 
   DashboardTicket copyWith({
+    String? title,
+    String? status,
+    String? timeLabel,
+    String? reporter,
+    String? priorityLabel,
+    Color? statusColor,
+    Color? statusBackgroundColor,
+    Color? priorityColor,
+    Color? priorityBackgroundColor,
+    Color? accentColor,
     List<DashboardTicketMessage>? chatMessages,
+    int? persistedMessageCount,
   }) {
     return DashboardTicket(
-      code: code,
-      title: title,
-      status: status,
-      timeLabel: timeLabel,
-      reporter: reporter,
-      priorityLabel: priorityLabel,
-      statusColor: statusColor,
-      statusBackgroundColor: statusBackgroundColor,
-      priorityColor: priorityColor,
-      priorityBackgroundColor: priorityBackgroundColor,
-      accentColor: accentColor,
+      id: id,
+      title: title ?? this.title,
+      status: status ?? this.status,
+      timeLabel: timeLabel ?? this.timeLabel,
+      reporter: reporter ?? this.reporter,
+      priorityLabel: priorityLabel ?? this.priorityLabel,
+      statusColor: statusColor ?? this.statusColor,
+      statusBackgroundColor:
+          statusBackgroundColor ?? this.statusBackgroundColor,
+      priorityColor: priorityColor ?? this.priorityColor,
+      priorityBackgroundColor:
+          priorityBackgroundColor ?? this.priorityBackgroundColor,
+      accentColor: accentColor ?? this.accentColor,
       chatMessages: chatMessages ?? this.chatMessages,
+      persistedMessageCount:
+          persistedMessageCount ?? this.persistedMessageCount,
     );
   }
 }

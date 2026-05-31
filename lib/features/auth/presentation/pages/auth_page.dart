@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/data/last_session_storage.dart';
-import '../../../../core/data/mock_auth_repository.dart';
+import '../../../../core/data/remote_auth_repository.dart';
 import '../../../../core/models/auth_user.dart';
 import '../../../home/presentation/pages/role_home_page.dart';
 import '../widgets/login_form.dart';
@@ -17,7 +17,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  final MockAuthRepository _repository = MockAuthRepository.instance;
+  final RemoteAuthRepository _repository = RemoteAuthRepository.instance;
   final LastSessionStorage _lastSessionStorage = LastSessionStorage.instance;
 
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
@@ -25,6 +25,7 @@ class _AuthPageState extends State<AuthPage> {
   final TextEditingController _loginPasswordController =
       TextEditingController();
   bool _isRestoringSession = true;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -56,12 +57,36 @@ class _AuthPageState extends State<AuthPage> {
     _loginEmailController.text = rememberedSession.email;
     _loginPasswordController.text = rememberedSession.password;
 
-    final user = _repository.login(
-      email: rememberedSession.email,
-      password: rememberedSession.password,
-    );
+    try {
+      final user = await _repository.login(
+        email: rememberedSession.email,
+        password: rememberedSession.password,
+      );
 
-    if (user == null) {
+      if (!mounted) {
+        return;
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+
+        _openHome(
+          user.copyWith(
+            password: rememberedSession.password,
+          ),
+        ).then((_) {
+          if (!mounted) {
+            return;
+          }
+
+          setState(() {
+            _isRestoringSession = false;
+          });
+        });
+      });
+    } catch (_) {
       await _lastSessionStorage.clear();
 
       if (!mounted) {
@@ -74,24 +99,7 @@ class _AuthPageState extends State<AuthPage> {
       setState(() {
         _isRestoringSession = false;
       });
-      return;
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
-      }
-
-      _openHome(user).then((_) {
-        if (!mounted) {
-          return;
-        }
-
-        setState(() {
-          _isRestoringSession = false;
-        });
-      });
-    });
   }
 
   void _showMessage(String message, {bool isError = false}) {
@@ -116,33 +124,55 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<void> _handleLogin() async {
+    if (_isSubmitting) {
+      return;
+    }
+
     final isValid = _loginFormKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
     }
 
-    final user = _repository.login(
-      email: _loginEmailController.text,
-      password: _loginPasswordController.text,
-    );
+    final email = _loginEmailController.text.trim().toLowerCase();
+    final password = _loginPasswordController.text;
 
-    if (user == null) {
-      _showMessage('Credenciales incorrectas.', isError: true);
-      return;
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final user = await _repository.login(
+        email: email,
+        password: password,
+      );
+
+      final authenticatedUser = user.copyWith(password: password);
+
+      await _lastSessionStorage.save(
+        email: authenticatedUser.email,
+        password: authenticatedUser.password,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      _showMessage('Sesión iniciada como ${authenticatedUser.role.label}.');
+      await _openHome(authenticatedUser);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      _showMessage(error.toString(), isError: true);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
     }
-
-    await _lastSessionStorage.save(
-      email: user.email,
-      password: user.password,
-    );
-
-    if (!mounted) {
-      return;
-    }
-
-    _showMessage('Sesión iniciada como ${user.role.label}.');
-    await _openHome(user);
   }
   // endregion
 
@@ -181,6 +211,7 @@ class _AuthPageState extends State<AuthPage> {
                             onSubmit: () {
                               _handleLogin();
                             },
+                            isSubmitting: _isSubmitting,
                           ),
                         ),
                       ),

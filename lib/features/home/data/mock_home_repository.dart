@@ -142,7 +142,7 @@ class MockHomeRepository {
       case UserRole.tecnico:
         return const <DashboardTicket>[
           DashboardTicket(
-            code: '#INC-1048',
+            id: 'inc-1048',
             title: 'Error al iniciar sesión en el portal',
             status: 'Abierto',
             timeLabel: 'Hoy, 09:10',
@@ -158,14 +158,16 @@ class MockHomeRepository {
                 id: 'inc-1048-1',
                 authorName: 'Ana Perez',
                 authorRoleLabel: 'Cliente',
-                body: 'El portal devuelve credenciales invalidas aunque la clave es correcta.',
+                body:
+                    'El portal devuelve credenciales invalidas aunque la clave es correcta.',
                 timeLabel: 'Hoy, 09:12',
               ),
               DashboardTicketMessage(
                 id: 'inc-1048-2',
                 authorName: 'Equipo Soporte',
                 authorRoleLabel: 'Tecnico',
-                body: 'Estamos revisando logs de autenticacion y bloqueo de sesiones.',
+                body:
+                    'Estamos revisando logs de autenticacion y bloqueo de sesiones.',
                 timeLabel: 'Hoy, 09:18',
               ),
               DashboardTicketMessage(
@@ -179,7 +181,7 @@ class MockHomeRepository {
             ],
           ),
           DashboardTicket(
-            code: '#INC-1047',
+            id: 'inc-1047',
             title: 'Actualizacion de software detenida',
             status: 'En progreso',
             timeLabel: 'Hoy, 08:45',
@@ -189,7 +191,7 @@ class MockHomeRepository {
             statusBackgroundColor: Color(0xFFFFF7E8),
             priorityColor: Color(0xFF9B6B00),
             priorityBackgroundColor: Color(0xFFFFF3D6),
-            accentColor: Color(0xFFFFAF1A),
+            accentColor: Color(0xFF1273EA),
             chatMessages: <DashboardTicketMessage>[
               DashboardTicketMessage(
                 id: 'inc-1047-1',
@@ -202,13 +204,14 @@ class MockHomeRepository {
                 id: 'inc-1047-2',
                 authorName: 'Lucia Torres',
                 authorRoleLabel: 'Tecnico',
-                body: 'He relanzado el despliegue y estoy validando espacio en disco.',
+                body:
+                    'He relanzado el despliegue y estoy validando espacio en disco.',
                 timeLabel: 'Hoy, 09:01',
               ),
             ],
           ),
           DashboardTicket(
-            code: '#INC-1046',
+            id: 'inc-1046',
             title: 'Solicitud de nuevo periférico',
             status: 'Resuelto',
             timeLabel: 'Ayer, 17:20',
@@ -224,7 +227,8 @@ class MockHomeRepository {
                 id: 'inc-1046-1',
                 authorName: 'Laura Sanchez',
                 authorRoleLabel: 'Cliente',
-                body: 'Necesito un teclado adicional para el puesto de recepcion.',
+                body:
+                    'Necesito un teclado adicional para el puesto de recepcion.',
                 timeLabel: 'Ayer, 15:40',
               ),
               DashboardTicketMessage(
@@ -240,7 +244,7 @@ class MockHomeRepository {
       case UserRole.admin:
         return const <DashboardTicket>[
           DashboardTicket(
-            code: '#ADM-209',
+            id: 'adm-209',
             title: 'Escalado SLA sin responsable asignado',
             status: 'Abierto',
             timeLabel: 'Hoy, 10:05',
@@ -263,13 +267,14 @@ class MockHomeRepository {
                 id: 'adm-209-2',
                 authorName: 'Marta Ruiz',
                 authorRoleLabel: 'Admin',
-                body: 'Reviso disponibilidad del equipo de guardia para reasignar.',
+                body:
+                    'Reviso disponibilidad del equipo de guardia para reasignar.',
                 timeLabel: 'Hoy, 10:11',
               ),
             ],
           ),
           DashboardTicket(
-            code: '#ADM-208',
+            id: 'adm-208',
             title: 'Revisión de permisos por grupo',
             status: 'En progreso',
             timeLabel: 'Hoy, 08:15',
@@ -279,7 +284,7 @@ class MockHomeRepository {
             statusBackgroundColor: Color(0xFFFFF7E8),
             priorityColor: Color(0xFF9B6B00),
             priorityBackgroundColor: Color(0xFFFFF3D6),
-            accentColor: Color(0xFF2D9CDB),
+            accentColor: Color(0xFF1273EA),
             chatMessages: <DashboardTicketMessage>[
               DashboardTicketMessage(
                 id: 'adm-208-1',
@@ -299,7 +304,7 @@ class MockHomeRepository {
             ],
           ),
           DashboardTicket(
-            code: '#ADM-207',
+            id: 'adm-207',
             title: 'Consolidado diario de incidencias generado',
             status: 'Resuelto',
             timeLabel: 'Ayer, 18:00',
@@ -324,7 +329,7 @@ class MockHomeRepository {
       case UserRole.cliente:
         return const <DashboardTicket>[
           DashboardTicket(
-            code: '#CLI-731',
+            id: 'cli-731',
             title: 'No puedo adjuntar una factura al ticket',
             status: 'Abierto',
             timeLabel: 'Hoy, 09:30',
@@ -340,20 +345,22 @@ class MockHomeRepository {
                 id: 'cli-731-1',
                 authorName: 'Carlos Romero',
                 authorRoleLabel: 'Cliente',
-                body: 'Al adjuntar la factura el formulario se reinicia y pierde el archivo.',
+                body:
+                    'Al adjuntar la factura el formulario se reinicia y pierde el archivo.',
                 timeLabel: 'Hoy, 09:31',
               ),
               DashboardTicketMessage(
                 id: 'cli-731-2',
                 authorName: 'Soporte tecnico',
                 authorRoleLabel: 'Tecnico',
-                body: 'Necesito saber si ocurre con PDF o tambien con imagenes.',
+                body:
+                    'Necesito saber si ocurre con PDF o tambien con imagenes.',
                 timeLabel: 'Hoy, 09:37',
               ),
             ],
           ),
           DashboardTicket(
-            code: '#CLI-728',
+            id: 'cli-728',
             title: 'Error al descargar el informe mensual',
             status: 'En progreso',
             timeLabel: 'Hoy, 08:45',
@@ -363,7 +370,7 @@ class MockHomeRepository {
             statusBackgroundColor: Color(0xFFFFF7E8),
             priorityColor: Color(0xFF9B6B00),
             priorityBackgroundColor: Color(0xFFFFF3D6),
-            accentColor: Color(0xFF2D9CDB),
+            accentColor: Color(0xFF1273EA),
             chatMessages: <DashboardTicketMessage>[
               DashboardTicketMessage(
                 id: 'cli-728-1',
@@ -376,14 +383,15 @@ class MockHomeRepository {
                 id: 'cli-728-2',
                 authorName: 'Carlos Romero',
                 authorRoleLabel: 'Cliente',
-                body: 'Perfecto, me sirve una exportacion provisional en Excel.',
+                body:
+                    'Perfecto, me sirve una exportacion provisional en Excel.',
                 timeLabel: 'Hoy, 09:02',
                 parentMessageId: 'cli-728-1',
               ),
             ],
           ),
           DashboardTicket(
-            code: '#CLI-720',
+            id: 'cli-720',
             title: 'Actualizacion de acceso completada',
             status: 'Resuelto',
             timeLabel: 'Ayer, 16:10',

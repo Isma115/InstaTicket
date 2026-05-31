@@ -11,12 +11,15 @@ class TicketChatSheet extends StatefulWidget {
     required this.ticket,
     required this.currentUser,
     required this.onMessagesChanged,
+    required this.onSendMessage,
     super.key,
   });
 
   final DashboardTicket ticket;
   final AuthUser currentUser;
   final ValueChanged<List<DashboardTicketMessage>> onMessagesChanged;
+  final Future<void> Function(String body, String? parentMessageId)
+      onSendMessage;
 
   @override
   State<TicketChatSheet> createState() => _TicketChatSheetState();
@@ -31,6 +34,7 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
 
   late List<DashboardTicketMessage> _messages;
   String? _replyTargetId;
+  bool _isSending = false;
 
   DashboardTicketMessage? get _replyTarget {
     if (_replyTargetId == null) {
@@ -73,19 +77,26 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
     });
   }
 
-  void _submitMessage() {
+  Future<void> _submitMessage() async {
+    if (_isSending) {
+      return;
+    }
+
     final text = _messageController.text.trim();
     if (text.isEmpty) {
       return;
     }
 
+    final parentMessageId = _replyTargetId;
+    final tempId = 'tmp-${DateTime.now().microsecondsSinceEpoch}';
+
     final newMessage = DashboardTicketMessage(
-      id: '${widget.ticket.code}-${DateTime.now().microsecondsSinceEpoch}',
-      authorName: widget.currentUser.name,
+      id: tempId,
+      authorName: widget.currentUser.displayName,
       authorRoleLabel: widget.currentUser.role.label,
       body: text,
       timeLabel: 'Ahora',
-      parentMessageId: _replyTargetId,
+      parentMessageId: parentMessageId,
       isCurrentUser: true,
     );
 
@@ -96,9 +107,11 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
       ];
       _messageController.clear();
       _replyTargetId = null;
+      _isSending = true;
     });
 
-    widget.onMessagesChanged(List<DashboardTicketMessage>.unmodifiable(_messages));
+    widget.onMessagesChanged(
+        List<DashboardTicketMessage>.unmodifiable(_messages));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_scrollController.hasClients) {
@@ -111,6 +124,38 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
         curve: Curves.easeOut,
       );
     });
+
+    try {
+      await widget.onSendMessage(text, parentMessageId);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _messages = _messages
+            .where((message) => message.id != tempId)
+            .toList(growable: false);
+      });
+
+      widget.onMessagesChanged(
+        List<DashboardTicketMessage>.unmodifiable(_messages),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
+    }
   }
 
   List<DashboardTicketMessage> _childrenOf(String? parentMessageId) {
@@ -164,6 +209,7 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
                   replyTarget: _replyTarget,
                   onCancelReply: _clearReplyTarget,
                   onSubmit: _submitMessage,
+                  isSending: _isSending,
                 ),
               ],
             ),
@@ -217,14 +263,6 @@ class _ChatSheetHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      ticket.code,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: ticket.accentColor,
-                            fontWeight: FontWeight.w800,
-                          ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
                       ticket.title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: const Color(0xFF173B5E),
@@ -232,6 +270,14 @@ class _ChatSheetHeader extends StatelessWidget {
                           ),
                     ),
                     const SizedBox(height: 8),
+                    Text(
+                      '${ticket.status} • ${ticket.reporter}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: ticket.accentColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 6),
                     Text(
                       '$messageCount mensajes en esta conversacion',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -325,8 +371,7 @@ class _ChatMessageTile extends StatelessWidget {
         isCurrentUser ? const Color(0xFF1F6BFF) : const Color(0xFFFFFFFF);
     final borderColor =
         isCurrentUser ? const Color(0xFF1F6BFF) : const Color(0xFFDDE7F0);
-    final textColor =
-        isCurrentUser ? Colors.white : const Color(0xFF173B5E);
+    final textColor = isCurrentUser ? Colors.white : const Color(0xFF173B5E);
     final metaColor =
         isCurrentUser ? const Color(0xFFD9E8FF) : const Color(0xFF6E8196);
 
@@ -513,13 +558,15 @@ class _ChatComposer extends StatelessWidget {
     required this.replyTarget,
     required this.onCancelReply,
     required this.onSubmit,
+    required this.isSending,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final DashboardTicketMessage? replyTarget;
   final VoidCallback onCancelReply;
-  final VoidCallback onSubmit;
+  final Future<void> Function() onSubmit;
+  final bool isSending;
 
   @override
   Widget build(BuildContext context) {
@@ -587,14 +634,23 @@ class _ChatComposer extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               FilledButton(
-                onPressed: onSubmit,
+                onPressed: isSending ? null : onSubmit,
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(52, 52),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Icon(Icons.send_rounded),
+                child: isSending
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.send_rounded),
               ),
             ],
           ),
