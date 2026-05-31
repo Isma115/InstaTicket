@@ -29,12 +29,13 @@ class _LoginFormState extends State<LoginForm> {
     required IconData prefixIcon,
     Widget? suffixIcon,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(prefixIcon),
       suffixIcon: suffixIcon,
-      hintStyle: const TextStyle(
-        color: Color(0xFFB0B7C3),
+      hintStyle: TextStyle(
+        color: colorScheme.onSurfaceVariant.withOpacity(0.72),
         fontSize: 16,
       ),
       contentPadding: const EdgeInsets.symmetric(
@@ -47,6 +48,8 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Form(
       key: widget.formKey,
@@ -59,19 +62,23 @@ class _LoginFormState extends State<LoginForm> {
               height: 122,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFEFF4FF),
+                color: colorScheme.primaryContainer.withOpacity(
+                  isDark ? 0.52 : 0.78,
+                ),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: const Color(0xFF2457F5).withOpacity(0.08),
+                    color: colorScheme.primary.withOpacity(
+                      isDark ? 0.28 : 0.12,
+                    ),
                     blurRadius: 22,
                     offset: const Offset(0, 10),
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.lock_person_outlined,
+              child: Icon(
+                Icons.verified_user_outlined,
                 size: 58,
-                color: Color(0xFF2F7DF6),
+                color: colorScheme.primary,
               ),
             ),
           ),
@@ -83,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontSize: 30,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF102A63),
+                color: colorScheme.onSurface,
               ),
             ),
           ),
@@ -94,7 +101,7 @@ class _LoginFormState extends State<LoginForm> {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge?.copyWith(
                 height: 1.55,
-                color: const Color(0xFF7A8496),
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -103,7 +110,7 @@ class _LoginFormState extends State<LoginForm> {
             'Correo electrónico',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF30436A),
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -113,7 +120,7 @@ class _LoginFormState extends State<LoginForm> {
             enabled: !widget.isSubmitting,
             decoration: _buildDecoration(
               hintText: 'ejemplo@empresa.com',
-              prefixIcon: Icons.mail_outline,
+              prefixIcon: Icons.alternate_email_rounded,
             ),
             validator: _validateEmail,
           ),
@@ -122,7 +129,7 @@ class _LoginFormState extends State<LoginForm> {
             'Contraseña',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF30436A),
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -132,7 +139,7 @@ class _LoginFormState extends State<LoginForm> {
             enabled: !widget.isSubmitting,
             decoration: _buildDecoration(
               hintText: 'Introduce tu contraseña',
-              prefixIcon: Icons.lock_outline,
+              prefixIcon: Icons.password_rounded,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -155,8 +162,8 @@ class _LoginFormState extends State<LoginForm> {
             child: FilledButton(
               onPressed: widget.isSubmitting ? null : widget.onSubmit,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF2F7DF6),
-                foregroundColor: Colors.white,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -167,12 +174,12 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               child: widget.isSubmitting
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2.2,
-                        color: Colors.white,
+                        color: colorScheme.onPrimary,
                       ),
                     )
                   : const Text('Entrar al panel'),
@@ -205,10 +212,6 @@ String? _validatePassword(String? value) {
 
   if (text.isEmpty) {
     return 'Introduce una contraseña.';
-  }
-
-  if (text.length < 6) {
-    return 'La contraseña debe tener al menos 6 caracteres.';
   }
 
   return null;

@@ -136,17 +136,29 @@ class _TicketRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     final isResolved = ticket.status == 'Resuelto';
+    final baseColor = isDark
+        ? colorScheme.surfaceContainerHigh
+        : colorScheme.surfaceContainerLow;
+    final resolvedColor =
+        isDark ? const Color(0xFF153429) : const Color(0xFFD8F1E5);
+    final borderColor = isResolved
+        ? (isDark ? const Color(0xFF2E8C67) : const Color(0xFF4EDAA0))
+        : colorScheme.outlineVariant;
+    final contentColor = colorScheme.onSurface;
 
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: isResolved ? const Color(0xFFD8F1E5) : Colors.white,
+        color: isResolved ? resolvedColor : baseColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color:
-                isResolved ? const Color(0x2236C978) : const Color(0x1020325B),
+            color: isResolved
+                ? const Color(0x2236C978)
+                : colorScheme.shadow.withOpacity(isDark ? 0.52 : 0.16),
             blurRadius: isResolved ? 20 : 18,
             offset: const Offset(0, 10),
           ),
@@ -155,7 +167,7 @@ class _TicketRow extends StatelessWidget {
       foregroundDecoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isResolved ? const Color(0xFF4EDAA0) : const Color(0xFFE6EDF4),
+          color: borderColor,
         ),
       ),
       child: Column(
@@ -167,7 +179,11 @@ class _TicketRow extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
               decoration: BoxDecoration(
-                color: _headerBackgroundColor(ticket),
+                color: _headerBackgroundColor(
+                  ticket,
+                  colorScheme: colorScheme,
+                  isDark: isDark,
+                ),
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
@@ -192,7 +208,7 @@ class _TicketRow extends StatelessWidget {
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: const Icon(
-                        Icons.check_rounded,
+                        Icons.task_alt_rounded,
                         color: Colors.white,
                         size: 20,
                       ),
@@ -203,7 +219,7 @@ class _TicketRow extends StatelessWidget {
                       ticket.title,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontSize: 16,
-                        color: const Color(0xFF1E344F),
+                        color: contentColor,
                         fontWeight: FontWeight.w700,
                         height: 1.2,
                       ),
@@ -214,14 +230,13 @@ class _TicketRow extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.72),
+                      color: colorScheme.surfaceContainerHighest
+                          .withOpacity(isDark ? 0.68 : 0.84),
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Icon(
-                      isExpanded
-                          ? Icons.keyboard_arrow_up_rounded
-                          : Icons.keyboard_arrow_down_rounded,
-                      color: const Color(0xFF173B5E),
+                      isExpanded ? Icons.remove_rounded : Icons.add_rounded,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -257,21 +272,22 @@ class _TicketRow extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       _TicketActionIcon(
-                        icon: Icons.chat_bubble_outline_rounded,
+                        icon: Icons.forum_outlined,
                         badgeLabel: ticket.messageCount.toString(),
                         onTap: () => onOpenChat(ticket),
                       ),
                       const SizedBox(width: 10),
                       _TicketActionIcon(
-                        icon: Icons.edit_outlined,
+                        icon: Icons.drive_file_rename_outline_rounded,
                         onTap: () => onEditTicket(ticket),
                       ),
                       if (canDeleteTicket) ...<Widget>[
                         const SizedBox(width: 10),
                         _TicketActionIcon(
-                          icon: Icons.delete_outline_rounded,
-                          iconColor: const Color(0xFFC0392B),
-                          backgroundColor: const Color(0xFFFFECE8),
+                          icon: Icons.delete_sweep_outlined,
+                          iconColor: colorScheme.error,
+                          backgroundColor:
+                              colorScheme.errorContainer.withOpacity(0.9),
                           onTap: () => onDeleteTicket(ticket),
                         ),
                       ],
@@ -295,20 +311,24 @@ class _TicketRow extends StatelessWidget {
 }
 // endregion
 
-Color _headerBackgroundColor(DashboardTicket ticket) {
+Color _headerBackgroundColor(
+  DashboardTicket ticket, {
+  required ColorScheme colorScheme,
+  required bool isDark,
+}) {
   if (ticket.status == 'Resuelto') {
-    return const Color(0xFFD8F1E5);
+    return isDark ? const Color(0xFF153429) : const Color(0xFFD8F1E5);
   }
 
   switch (ticket.priorityLabel) {
     case 'Alta':
-      return const Color(0xFFFFE1DD);
+      return isDark ? const Color(0xFF3B2425) : const Color(0xFFFFE1DD);
     case 'Media':
-      return const Color(0xFFFFF0C9);
+      return isDark ? const Color(0xFF3D3420) : const Color(0xFFFFF0C9);
     case 'Baja':
-      return const Color(0xFFD8F1E5);
+      return isDark ? const Color(0xFF1E3A2E) : const Color(0xFFD8F1E5);
     default:
-      return ticket.accentColor.withOpacity(0.16);
+      return ticket.accentColor.withOpacity(isDark ? 0.24 : 0.16);
   }
 }
 
@@ -327,10 +347,11 @@ class _TicketMetaLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = theme.colorScheme;
     return RichText(
       text: TextSpan(
         style: theme.textTheme.bodySmall?.copyWith(
-          color: const Color(0xFF6A7C92),
+          color: colorScheme.onSurfaceVariant,
           height: 1.4,
         ),
         children: <InlineSpan>[
@@ -338,7 +359,7 @@ class _TicketMetaLine extends StatelessWidget {
           TextSpan(
             text: value,
             style: TextStyle(
-              color: textColor ?? const Color(0xFF173B5E),
+              color: textColor ?? colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -365,6 +386,7 @@ class _TicketActionIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -375,12 +397,15 @@ class _TicketActionIcon extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: backgroundColor ?? const Color(0xFFF3F7FA),
+              color: backgroundColor ?? colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: colorScheme.outlineVariant,
+              ),
             ),
             child: Icon(
               icon,
-              color: iconColor ?? const Color(0xFF6B7C92),
+              color: iconColor ?? colorScheme.onSurfaceVariant,
               size: 16,
             ),
           ),
@@ -393,9 +418,12 @@ class _TicketActionIcon extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1F6BFF),
+                  color: colorScheme.primary,
                   borderRadius: BorderRadius.circular(999),
-                  border: Border.all(color: Colors.white, width: 1.5),
+                  border: Border.all(
+                    color: colorScheme.surfaceContainerLow,
+                    width: 1.5,
+                  ),
                 ),
                 child: Text(
                   badgeLabel!,

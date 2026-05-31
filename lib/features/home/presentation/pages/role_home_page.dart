@@ -1,6 +1,7 @@
 // region Componentes Dashboard: imports
 import 'package:flutter/material.dart';
 
+import '../../../../core/data/theme_preferences.dart';
 import '../../../../core/models/auth_user.dart';
 import '../../../../core/models/user_role.dart';
 import '../../data/remote_home_repository.dart';
@@ -605,18 +606,20 @@ class _RoleHomePageState extends State<RoleHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (_isLoadingDashboard) {
-      return const Scaffold(
-        backgroundColor: Color(0xFFE6EDF2),
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: colorScheme.primary),
         ),
       );
     }
 
     if (_dashboardError != null) {
       return Scaffold(
-        backgroundColor: const Color(0xFFE6EDF2),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -627,7 +630,7 @@ class _RoleHomePageState extends State<RoleHomePage> {
                   _dashboardError!,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF173B5E),
+                        color: colorScheme.onSurface,
                         height: 1.4,
                       ),
                 ),
@@ -645,8 +648,8 @@ class _RoleHomePageState extends State<RoleHomePage> {
 
     final dashboard = _dashboard;
     if (dashboard == null) {
-      return const Scaffold(
-        backgroundColor: Color(0xFFE6EDF2),
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
           child: Text('No se pudo cargar el dashboard.'),
         ),
@@ -657,11 +660,12 @@ class _RoleHomePageState extends State<RoleHomePage> {
     final currentTab = tabs[_selectedTabIndex];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE6EDF2),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: <Widget>[
-          const Positioned.fill(
-            child: _DashboardBackdrop(),
+          Positioned.fill(
+            child: _DashboardBackdrop(
+                isDark: colorScheme.brightness == Brightness.dark),
           ),
           SafeArea(
             child: LayoutBuilder(
@@ -680,7 +684,7 @@ class _RoleHomePageState extends State<RoleHomePage> {
                         borderRadius: BorderRadius.circular(fullBleed ? 0 : 34),
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4F7FA),
+                            color: colorScheme.surface,
                             boxShadow: fullBleed
                                 ? null
                                 : const <BoxShadow>[
@@ -713,7 +717,9 @@ class _RoleHomePageState extends State<RoleHomePage> {
                                               .textTheme
                                               .titleLarge
                                               ?.copyWith(
-                                                color: const Color(0xFF173B5E),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
                                                 fontWeight: FontWeight.w800,
                                               ),
                                         ),
@@ -804,7 +810,7 @@ class _RoleHomePageState extends State<RoleHomePage> {
             Text(
               '${visibleTickets.length} tickets visibles',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: const Color(0xFF65788F),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
             ),
@@ -833,8 +839,12 @@ class _RoleHomePageState extends State<RoleHomePage> {
         return _ProfilePanel(
           user: _currentUser,
           onProfileSaved: _saveProfile,
-          onTwoFactorChanged: _toggleTwoFactor,
           onLogout: () => Navigator.of(context).pop(),
+        );
+      case 'ajustes':
+        return _SettingsPanel(
+          user: _currentUser,
+          onTwoFactorChanged: _toggleTwoFactor,
         );
       default:
         return const SizedBox.shrink();
@@ -877,13 +887,15 @@ class _TicketFiltersToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE4EBF3)),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: Column(
         children: <Widget>[
@@ -990,12 +1002,14 @@ class _TicketFiltersSheetState extends State<_TicketFiltersSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SafeArea(
       top: false,
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
-        decoration: const BoxDecoration(
-          color: Color(0xFFF8FBFD),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: Column(
@@ -1007,7 +1021,7 @@ class _TicketFiltersSheetState extends State<_TicketFiltersSheet> {
                 width: 54,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD5E0EA),
+                  color: colorScheme.outlineVariant,
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -1019,7 +1033,7 @@ class _TicketFiltersSheetState extends State<_TicketFiltersSheet> {
                   child: Text(
                     'Filtros de tickets',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: const Color(0xFF173B5E),
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w800,
                         ),
                   ),
@@ -1076,13 +1090,15 @@ class _FilterGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: const Color(0xFF6A7C92),
+                color: colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w700,
               ),
         ),
@@ -1096,29 +1112,29 @@ class _FilterGroup extends StatelessWidget {
                   label: Text(value),
                   selected: value == selectedValue,
                   onSelected: (_) => onSelected(value),
-                  backgroundColor: const Color(0xFFF2F6FA),
-                  selectedColor: const Color(0xFFE4F0FF),
+                  backgroundColor: colorScheme.surfaceContainerHigh,
+                  selectedColor: colorScheme.primaryContainer,
                   surfaceTintColor: Colors.transparent,
                   pressElevation: 0,
                   shadowColor: Colors.transparent,
                   side: BorderSide(
                     color: value == selectedValue
-                        ? const Color(0xFF1F6BFF)
-                        : Colors.transparent,
+                        ? colorScheme.primary
+                        : colorScheme.outlineVariant,
                   ),
                   color: WidgetStateProperty.resolveWith<Color?>(
                     (states) {
                       if (states.contains(WidgetState.selected)) {
-                        return const Color(0xFFE4F0FF);
+                        return colorScheme.primaryContainer;
                       }
 
-                      return const Color(0xFFF2F6FA);
+                      return colorScheme.surfaceContainerHigh;
                     },
                   ),
                   labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: value == selectedValue
-                            ? const Color(0xFF1B4F85)
-                            : const Color(0xFF5F738A),
+                            ? colorScheme.primary
+                            : colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w700,
                       ),
                 ),
@@ -1139,16 +1155,18 @@ class _ActiveFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF3FF),
+        color: colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: const Color(0xFF1B4F85),
+              color: colorScheme.primary,
               fontWeight: FontWeight.w700,
             ),
       ),
@@ -1159,20 +1177,15 @@ class _ActiveFilterChip extends StatelessWidget {
 
 // region Componentes Dashboard: fondo decorativo exterior
 class _DashboardBackdrop extends StatelessWidget {
-  const _DashboardBackdrop();
+  const _DashboardBackdrop({required this.isDark});
+
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[
-            Color(0xFFF3F6F9),
-            Color(0xFFDDE6EC),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF101A15) : const Color(0xFFE7ECE5),
       ),
       child: Stack(
         children: <Widget>[
@@ -1181,7 +1194,7 @@ class _DashboardBackdrop extends StatelessWidget {
             left: -40,
             child: _BackdropGlow(
               size: 200,
-              color: Color(0x33FFFFFF),
+              color: isDark ? const Color(0x1A5B8AFF) : const Color(0x33FFFFFF),
             ),
           ),
           Positioned(
@@ -1189,7 +1202,7 @@ class _DashboardBackdrop extends StatelessWidget {
             right: -60,
             child: _BackdropGlow(
               size: 220,
-              color: Color(0x222457F5),
+              color: isDark ? const Color(0x144DD4DB) : const Color(0x222457F5),
             ),
           ),
         ],
@@ -1235,12 +1248,15 @@ class _BottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = colorScheme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(6, 6, 6, 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: const Border(
-          top: BorderSide(color: Color(0xFFE2EAF2)),
+        color: colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: colorScheme.outlineVariant),
         ),
       ),
       child: Row(
@@ -1265,15 +1281,17 @@ class _BottomNavigationBar extends StatelessWidget {
                         height: 34,
                         decoration: BoxDecoration(
                           color: selected
-                              ? const Color(0xFFE9F4FF)
+                              ? (isDark
+                                  ? colorScheme.primaryContainer
+                                  : const Color(0xFFE9F4FF))
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
                           item.icon,
                           color: selected
-                              ? const Color(0xFF0E4E7B)
-                              : const Color(0xFF7C8DA4),
+                              ? colorScheme.primary
+                              : colorScheme.onSurfaceVariant,
                           size: 20,
                         ),
                       ),
@@ -1282,8 +1300,8 @@ class _BottomNavigationBar extends StatelessWidget {
                         item.label,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: selected
-                                  ? const Color(0xFF173B5E)
-                                  : const Color(0xFF7C8DA4),
+                                  ? colorScheme.onSurface
+                                  : colorScheme.onSurfaceVariant,
                               fontWeight:
                                   selected ? FontWeight.w700 : FontWeight.w500,
                             ),
@@ -1313,6 +1331,8 @@ class _CreateTicketButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -1320,16 +1340,16 @@ class _CreateTicketButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Ink(
           decoration: BoxDecoration(
-            color: const Color(0xFF173B5E),
+            color: colorScheme.primary,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Tooltip(
               message: tooltip,
-              child: const Icon(
-                Icons.add_rounded,
-                color: Colors.white,
+              child: Icon(
+                Icons.add_circle_outline_rounded,
+                color: colorScheme.onPrimary,
                 size: 20,
               ),
             ),
@@ -1357,6 +1377,8 @@ class _DashboardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -1367,7 +1389,7 @@ class _DashboardSection extends StatelessWidget {
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: const Color(0xFF173B5E),
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
                     ),
               ),
@@ -1383,7 +1405,7 @@ class _DashboardSection extends StatelessWidget {
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFF70839A),
+                  color: colorScheme.onSurfaceVariant,
                 ),
           ),
           const SizedBox(height: 16),
@@ -1405,18 +1427,20 @@ class _SupportGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFE5EDF4)),
-        boxShadow: const <BoxShadow>[
+        border: Border.all(color: colorScheme.outlineVariant),
+        boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Color(0x1020325B),
+            color: colorScheme.shadow.withOpacity(0.06),
             blurRadius: 18,
-            offset: Offset(0, 10),
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -1443,7 +1467,7 @@ class _SupportGroupCard extends StatelessWidget {
                 Text(
                   group.title,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: const Color(0xFF173B5E),
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w800,
                       ),
                 ),
@@ -1451,7 +1475,7 @@ class _SupportGroupCard extends StatelessWidget {
                 Text(
                   group.subtitle,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF6C8097),
+                        color: colorScheme.onSurfaceVariant,
                       ),
                 ),
                 const SizedBox(height: 10),
@@ -1475,13 +1499,11 @@ class _ProfilePanel extends StatefulWidget {
   const _ProfilePanel({
     required this.user,
     required this.onProfileSaved,
-    required this.onTwoFactorChanged,
     required this.onLogout,
   });
 
   final AuthUser user;
   final ValueChanged<AuthUser> onProfileSaved;
-  final ValueChanged<bool> onTwoFactorChanged;
   final VoidCallback onLogout;
 
   @override
@@ -1506,8 +1528,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.user.displayName != widget.user.displayName ||
-        oldWidget.user.photoUrl != widget.user.photoUrl ||
-        oldWidget.user.twoFactorEnabled != widget.user.twoFactorEnabled) {
+        oldWidget.user.photoUrl != widget.user.photoUrl) {
       _syncWithUser();
     }
   }
@@ -1566,23 +1587,25 @@ class _ProfilePanelState extends State<_ProfilePanel> {
     required String label,
     required IconData icon,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return InputDecoration(
       labelText: label,
       prefixIcon: Icon(icon),
       filled: true,
-      fillColor: const Color(0xFFF7FAFD),
+      fillColor: colorScheme.surfaceContainerHighest,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Color(0xFFDCE6F0)),
+        borderSide: BorderSide(color: colorScheme.outlineVariant),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Color(0xFFDCE6F0)),
+        borderSide: BorderSide(color: colorScheme.outlineVariant),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(
-          color: Color(0xFF2457F5),
+        borderSide: BorderSide(
+          color: colorScheme.primary,
           width: 1.4,
         ),
       ),
@@ -1591,6 +1614,8 @@ class _ProfilePanelState extends State<_ProfilePanel> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -1598,9 +1623,9 @@ class _ProfilePanelState extends State<_ProfilePanel> {
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFE5EDF4)),
+            border: Border.all(color: colorScheme.outlineVariant),
           ),
           child: Column(
             children: <Widget>[
@@ -1624,9 +1649,9 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                       style: FilledButton.styleFrom(
                         shape: const CircleBorder(),
                         padding: const EdgeInsets.all(12),
-                        backgroundColor: const Color(0xFF2457F5),
+                        backgroundColor: colorScheme.primary,
                       ),
-                      child: const Icon(Icons.photo_camera_outlined, size: 18),
+                      child: const Icon(Icons.add_a_photo_outlined, size: 18),
                     ),
                   ),
                 ],
@@ -1635,7 +1660,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
               Text(
                 widget.user.displayName,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: const Color(0xFF173B5E),
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
                     ),
               ),
@@ -1643,21 +1668,21 @@ class _ProfilePanelState extends State<_ProfilePanel> {
               Text(
                 widget.user.email,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF6C8097),
+                      color: colorScheme.onSurfaceVariant,
                     ),
               ),
               const SizedBox(height: 6),
               Text(
                 'Rol activo: ${widget.user.role.label}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF0E4E7B),
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.w700,
                     ),
               ),
               const SizedBox(height: 12),
               TextButton.icon(
                 onPressed: _openPhotoPicker,
-                icon: const Icon(Icons.image_outlined),
+                icon: const Icon(Icons.photo_library_outlined),
                 label: const Text('Cambiar foto de perfil'),
               ),
             ],
@@ -1668,9 +1693,9 @@ class _ProfilePanelState extends State<_ProfilePanel> {
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFE5EDF4)),
+            border: Border.all(color: colorScheme.outlineVariant),
           ),
           child: Form(
             key: _formKey,
@@ -1680,7 +1705,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                 Text(
                   'Informacion personal',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: const Color(0xFF173B5E),
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w800,
                       ),
                 ),
@@ -1688,7 +1713,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                 Text(
                   'Edita nombre, apellido y foto de perfil desde esta vista.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF70839A),
+                        color: colorScheme.onSurfaceVariant,
                       ),
                 ),
                 const SizedBox(height: 18),
@@ -1703,7 +1728,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                             controller: _nameController,
                             decoration: _buildInputDecoration(
                               label: 'Nombre',
-                              icon: Icons.badge_outlined,
+                              icon: Icons.account_box_outlined,
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -1718,7 +1743,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                             controller: _lastNameController,
                             decoration: _buildInputDecoration(
                               label: 'Apellido',
-                              icon: Icons.person_outline_rounded,
+                              icon: Icons.face_retouching_natural_outlined,
                             ),
                           ),
                         ],
@@ -1732,7 +1757,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                             controller: _nameController,
                             decoration: _buildInputDecoration(
                               label: 'Nombre',
-                              icon: Icons.badge_outlined,
+                              icon: Icons.account_box_outlined,
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -1749,7 +1774,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                             controller: _lastNameController,
                             decoration: _buildInputDecoration(
                               label: 'Apellido',
-                              icon: Icons.person_outline_rounded,
+                              icon: Icons.face_retouching_natural_outlined,
                             ),
                           ),
                         ),
@@ -1763,7 +1788,7 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                   readOnly: true,
                   decoration: _buildInputDecoration(
                     label: 'Correo electronico',
-                    icon: Icons.mail_outline_rounded,
+                    icon: Icons.forward_to_inbox_outlined,
                   ),
                 ),
                 const SizedBox(height: 18),
@@ -1771,11 +1796,11 @@ class _ProfilePanelState extends State<_ProfilePanel> {
                   width: double.infinity,
                   child: FilledButton.icon(
                     onPressed: _saveProfile,
-                    icon: const Icon(Icons.save_outlined),
+                    icon: const Icon(Icons.check_circle_outline_rounded),
                     label: const Text('Guardar cambios del perfil'),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: const Color(0xFF2457F5),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -1783,95 +1808,6 @@ class _ProfilePanelState extends State<_ProfilePanel> {
             ),
           ),
         ),
-        const SizedBox(height: 14),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFE5EDF4)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Doble autenticacion',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: const Color(0xFF173B5E),
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          widget.user.twoFactorEnabled
-                              ? 'Proteccion extra activa para el acceso a la cuenta.'
-                              : 'Activa una segunda capa de verificacion para la cuenta.',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFF70839A),
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: widget.user.twoFactorEnabled
-                          ? const Color(0xFFE7F7EF)
-                          : const Color(0xFFF4F6F9),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      widget.user.twoFactorEnabled ? 'Activa' : 'Inactiva',
-                      style: TextStyle(
-                        color: widget.user.twoFactorEnabled
-                            ? const Color(0xFF198754)
-                            : const Color(0xFF7A8AA0),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              SizedBox(
-                width: double.infinity,
-                child: widget.user.twoFactorEnabled
-                    ? OutlinedButton.icon(
-                        onPressed: () => widget.onTwoFactorChanged(false),
-                        icon: const Icon(Icons.shield_moon_outlined),
-                        label: const Text('Desactivar doble autenticacion'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                      )
-                    : FilledButton.icon(
-                        onPressed: () => widget.onTwoFactorChanged(true),
-                        icon: const Icon(Icons.verified_user_outlined),
-                        label: const Text('Activar doble autenticacion'),
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: const Color(0xFF173B5E),
-                        ),
-                      ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 18),
         const SizedBox(height: 18),
         SizedBox(
           width: double.infinity,
@@ -1881,6 +1817,357 @@ class _ProfilePanelState extends State<_ProfilePanel> {
             label: const Text('Cerrar sesion'),
           ),
         ),
+      ],
+    );
+  }
+}
+// endregion
+
+// region Componentes Dashboard: panel de ajustes
+class _SettingsPanel extends StatefulWidget {
+  const _SettingsPanel({
+    required this.user,
+    required this.onTwoFactorChanged,
+  });
+
+  final AuthUser user;
+  final ValueChanged<bool> onTwoFactorChanged;
+
+  @override
+  State<_SettingsPanel> createState() => _SettingsPanelState();
+}
+
+class _SettingsPanelState extends State<_SettingsPanel> {
+  final ThemePreferences _themePrefs = ThemePreferences.instance;
+  bool _largeText = false;
+  bool _highContrast = false;
+  bool _reduceAnimations = false;
+  bool _notifications = true;
+
+  @override
+  void didUpdateWidget(covariant _SettingsPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  bool get _isDarkMode {
+    final mode = _themePrefs.notifier.value;
+    if (mode == ThemeMode.dark) return true;
+    if (mode == ThemeMode.light) return false;
+    return MediaQuery.of(context).platformBrightness == Brightness.dark;
+  }
+
+  Widget _buildSectionCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final surfaceColor = colorScheme.surface;
+    final borderColor = colorScheme.outlineVariant;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: borderColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: colorScheme.primary, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w800,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Widget trailing,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: <Widget>[
+          Icon(icon, color: colorScheme.onSurfaceVariant, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          trailing,
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final twoFactorEnabled = widget.user.twoFactorEnabled;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildSectionCard(
+          title: 'Apariencia',
+          subtitle: 'Personaliza el aspecto visual de la aplicacion.',
+          icon: Icons.palette_outlined,
+          children: <Widget>[
+            _buildSettingsTile(
+              title: 'Modo oscuro',
+              subtitle: _isDarkMode
+                  ? 'Tema oscuro activado.'
+                  : 'Tema claro activado.',
+              icon: Icons.dark_mode_outlined,
+              trailing: Switch(
+                value: _isDarkMode,
+                onChanged: (value) async {
+                  await _themePrefs
+                      .save(value ? ThemeMode.dark : ThemeMode.light);
+                  setState(() {});
+                },
+                activeColor: colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _buildSectionCard(
+          title: 'Accesibilidad',
+          subtitle: 'Ajusta la interfaz para mejorar la experiencia.',
+          icon: Icons.accessibility_new_outlined,
+          children: <Widget>[
+            _buildSettingsTile(
+              title: 'Texto grande',
+              subtitle: 'Aumenta el tamanho del texto en toda la app.',
+              icon: Icons.text_increase_outlined,
+              trailing: Switch(
+                value: _largeText,
+                onChanged: (value) {
+                  setState(() {
+                    _largeText = value;
+                  });
+                },
+                activeColor: colorScheme.primary,
+              ),
+            ),
+            _buildSettingsTile(
+              title: 'Alto contraste',
+              subtitle:
+                  'Mejora la visibilidad con bordes y contrastes marcados.',
+              icon: Icons.contrast_outlined,
+              trailing: Switch(
+                value: _highContrast,
+                onChanged: (value) {
+                  setState(() {
+                    _highContrast = value;
+                  });
+                },
+                activeColor: colorScheme.primary,
+              ),
+            ),
+            _buildSettingsTile(
+              title: 'Reducir animaciones',
+              subtitle: 'Minimiza las transiciones y movimientos.',
+              icon: Icons.motion_photos_off_outlined,
+              trailing: Switch(
+                value: _reduceAnimations,
+                onChanged: (value) {
+                  setState(() {
+                    _reduceAnimations = value;
+                  });
+                },
+                activeColor: colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _buildSectionCard(
+          title: 'Seguridad',
+          subtitle: 'Protege el acceso a tu cuenta.',
+          icon: Icons.shield_outlined,
+          children: <Widget>[
+            _buildSettingsTile(
+              title: 'Doble autenticacion',
+              subtitle: twoFactorEnabled
+                  ? 'Proteccion extra activa para el acceso a la cuenta.'
+                  : 'Activa una segunda capa de verificacion para la cuenta.',
+              icon: Icons.verified_user_outlined,
+              trailing: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: twoFactorEnabled
+                          ? colorScheme.primaryContainer
+                          : colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      twoFactorEnabled ? 'Activa' : 'Inactiva',
+                      style: TextStyle(
+                        color: twoFactorEnabled
+                            ? colorScheme.primary
+                            : colorScheme.onSurfaceVariant,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 32,
+                    child: twoFactorEnabled
+                        ? OutlinedButton(
+                            onPressed: () => widget.onTwoFactorChanged(false),
+                            style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              textStyle: const TextStyle(fontSize: 12),
+                            ),
+                            child: const Text('Desactivar'),
+                          )
+                        : FilledButton(
+                            onPressed: () => widget.onTwoFactorChanged(true),
+                            style: FilledButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              textStyle: const TextStyle(fontSize: 12),
+                            ),
+                            child: const Text('Activar'),
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _buildSectionCard(
+          title: 'Ajustes varios',
+          subtitle: 'Otras opciones de configuracion.',
+          icon: Icons.tune_outlined,
+          children: <Widget>[
+            _buildSettingsTile(
+              title: 'Notificaciones',
+              subtitle: 'Recibe alertas sobre tus tickets.',
+              icon: Icons.notifications_outlined,
+              trailing: Switch(
+                value: _notifications,
+                onChanged: (value) {
+                  setState(() {
+                    _notifications = value;
+                  });
+                },
+                activeColor: colorScheme.primary,
+              ),
+            ),
+            _buildSettingsTile(
+              title: 'Idioma',
+              subtitle: 'Espanol',
+              icon: Icons.language_outlined,
+              trailing: Icon(
+                Icons.chevron_right_rounded,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: colorScheme.outlineVariant),
+          ),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.info_outline_rounded,
+                color: colorScheme.onSurfaceVariant,
+                size: 20,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'InstaTicket v1.0.0',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 18),
       ],
     );
   }
@@ -1918,13 +2205,10 @@ class _InitialsAvatar extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: <Color>[
-            Color(0xFF4CC9F0),
-            Color(0xFF2457F5),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        color: const Color(0xFF2E8A70),
+        border: Border.all(
+          color: const Color(0xFF1E6B55),
+          width: 1.2,
         ),
         shape: BoxShape.circle,
       ),
@@ -1965,9 +2249,9 @@ class _UserProfileAvatar extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: const <BoxShadow>[
           BoxShadow(
-            color: Color(0x1F2457F5),
-            blurRadius: 22,
-            offset: Offset(0, 12),
+            color: Color(0x1A214D3E),
+            blurRadius: 16,
+            offset: Offset(0, 8),
           ),
         ],
       ),
@@ -2003,12 +2287,14 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SafeArea(
       top: false,
       child: Container(
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
-        decoration: const BoxDecoration(
-          color: Color(0xFFF8FBFD),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: Column(
@@ -2020,7 +2306,7 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
                 width: 54,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD5E0EA),
+                  color: colorScheme.outlineVariant,
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -2029,7 +2315,7 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
             Text(
               'Selecciona una foto de perfil',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: const Color(0xFF173B5E),
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w800,
                   ),
             ),
@@ -2037,7 +2323,7 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
             Text(
               'Galeria demo de avatares para la interfaz frontend.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF70839A),
+                    color: colorScheme.onSurfaceVariant,
                   ),
             ),
             const SizedBox(height: 18),
@@ -2053,12 +2339,12 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
                     duration: const Duration(milliseconds: 180),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorScheme.surfaceContainerLowest,
                       borderRadius: BorderRadius.circular(22),
                       border: Border.all(
                         color: selected
-                            ? const Color(0xFF2457F5)
-                            : const Color(0xFFDDE6EF),
+                            ? colorScheme.primary
+                            : colorScheme.outlineVariant,
                         width: selected ? 1.6 : 1,
                       ),
                     ),
@@ -2075,7 +2361,7 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
                           option.label,
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: const Color(0xFF173B5E),
+                                    color: colorScheme.onSurface,
                                     fontWeight: FontWeight.w700,
                                   ),
                         ),
@@ -2150,7 +2436,7 @@ List<_DashboardTab> _buildTabs(AuthUser user) {
     _DashboardTab(
       id: 'inicio',
       label: 'Inicio',
-      icon: Icons.home_rounded,
+      icon: Icons.space_dashboard_outlined,
       title: 'Inicio - Panel de Control',
       subtitle: user.role.headline,
       sectionTitle: 'Tickets recientes',
@@ -2159,7 +2445,7 @@ List<_DashboardTab> _buildTabs(AuthUser user) {
     _DashboardTab(
       id: 'tickets',
       label: 'Tickets',
-      icon: Icons.inventory_2_outlined,
+      icon: Icons.confirmation_number_outlined,
       title: 'Tickets - Seguimiento',
       subtitle: 'Vista compacta de incidencias abiertas y resueltas.',
       sectionTitle: 'Mis tickets',
@@ -2168,7 +2454,7 @@ List<_DashboardTab> _buildTabs(AuthUser user) {
     _DashboardTab(
       id: 'grupos',
       label: 'Grupos',
-      icon: Icons.groups_2_outlined,
+      icon: Icons.hub_outlined,
       title: 'Grupos - Equipos',
       subtitle: 'Accesos rapidos a los equipos de soporte disponibles.',
       sectionTitle: 'Grupos activos',
@@ -2177,12 +2463,21 @@ List<_DashboardTab> _buildTabs(AuthUser user) {
     _DashboardTab(
       id: 'perfil',
       label: 'Perfil',
-      icon: Icons.person_outline_rounded,
+      icon: Icons.manage_accounts_outlined,
       title: 'Perfil - Cuenta',
       subtitle: 'Datos basicos de la sesion y accesos personales.',
       sectionTitle: 'Perfil de usuario',
       sectionSubtitle:
           'Informacion de la cuenta y resumen rapido de actividad.',
+    ),
+    _DashboardTab(
+      id: 'ajustes',
+      label: 'Ajustes',
+      icon: Icons.tune_rounded,
+      title: 'Ajustes - Configuracion',
+      subtitle: 'Personaliza la aplicacion a tu gusto.',
+      sectionTitle: 'Ajustes',
+      sectionSubtitle: 'Configuracion de la aplicacion y preferencias.',
     ),
   ];
 }

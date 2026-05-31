@@ -1,8 +1,7 @@
 // region Lógica Configuración Frontend: configuración de API remota
-import 'dart:io';
-
 class AppConfig {
   AppConfig._();
+  static const _macLanApiBaseUrl = 'http://192.168.1.60:4000';
 
   static String get apiBaseUrl {
     const fromEnvironment = String.fromEnvironment('API_BASE_URL');
@@ -11,10 +10,7 @@ class AppConfig {
       return _normalize(fromEnvironment);
     }
 
-    final defaultUrl =
-        Platform.isAndroid ? 'http://10.0.2.2:4000' : 'http://127.0.0.1:4000';
-
-    return _normalize(defaultUrl);
+    return _normalize(_macLanApiBaseUrl);
   }
 
   static String _normalize(String rawUrl) {

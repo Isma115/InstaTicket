@@ -43,12 +43,13 @@ class _RegisterFormState extends State<RegisterForm> {
     required IconData prefixIcon,
     Widget? suffixIcon,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(prefixIcon),
       suffixIcon: suffixIcon,
-      hintStyle: const TextStyle(
-        color: Color(0xFFB0B7C3),
+      hintStyle: TextStyle(
+        color: colorScheme.onSurfaceVariant.withOpacity(0.72),
         fontSize: 16,
       ),
       contentPadding: const EdgeInsets.symmetric(
@@ -61,6 +62,8 @@ class _RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Form(
       key: widget.formKey,
@@ -73,10 +76,14 @@ class _RegisterFormState extends State<RegisterForm> {
               height: 122,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFEFF4FF),
+                color: colorScheme.primaryContainer.withOpacity(
+                  isDark ? 0.52 : 0.78,
+                ),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: const Color(0xFF2457F5).withOpacity(0.08),
+                    color: colorScheme.primary.withOpacity(
+                      isDark ? 0.28 : 0.12,
+                    ),
                     blurRadius: 22,
                     offset: const Offset(0, 10),
                   ),
@@ -85,10 +92,10 @@ class _RegisterFormState extends State<RegisterForm> {
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
-                  const Icon(
+                  Icon(
                     Icons.person,
                     size: 62,
-                    color: Color(0xFF3B82F6),
+                    color: colorScheme.primary,
                   ),
                   Positioned(
                     right: 18,
@@ -97,14 +104,15 @@ class _RegisterFormState extends State<RegisterForm> {
                       width: 34,
                       height: 34,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2F7DF6),
+                        color: colorScheme.primary,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
+                        border:
+                            Border.all(color: colorScheme.onPrimary, width: 3),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
                         size: 20,
-                        color: Colors.white,
+                        color: colorScheme.onPrimary,
                       ),
                     ),
                   ),
@@ -120,7 +128,7 @@ class _RegisterFormState extends State<RegisterForm> {
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontSize: 30,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF102A63),
+                color: colorScheme.onSurface,
               ),
             ),
           ),
@@ -131,7 +139,7 @@ class _RegisterFormState extends State<RegisterForm> {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge?.copyWith(
                 height: 1.55,
-                color: const Color(0xFF7A8496),
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -140,7 +148,7 @@ class _RegisterFormState extends State<RegisterForm> {
             'Nombre completo',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF30436A),
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -157,7 +165,7 @@ class _RegisterFormState extends State<RegisterForm> {
             'Correo electrónico',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF30436A),
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -175,7 +183,7 @@ class _RegisterFormState extends State<RegisterForm> {
             'Contraseña',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF30436A),
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -205,7 +213,7 @@ class _RegisterFormState extends State<RegisterForm> {
             'Confirmar contraseña',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF30436A),
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -245,7 +253,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     _acceptedTerms = value ?? false;
                   });
                 },
-                side: const BorderSide(color: Color(0xFFBDC6D5)),
+                side: BorderSide(color: colorScheme.outline),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -254,10 +262,10 @@ class _RegisterFormState extends State<RegisterForm> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 12),
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF5E6573),
+                        color: colorScheme.onSurfaceVariant,
                         height: 1.45,
                       ),
                       children: <InlineSpan>[
@@ -265,7 +273,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         TextSpan(
                           text: 'términos y condiciones',
                           style: TextStyle(
-                            color: Color(0xFF2F7DF6),
+                            color: colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -273,7 +281,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         TextSpan(
                           text: 'política de privacidad',
                           style: TextStyle(
-                            color: Color(0xFF2F7DF6),
+                            color: colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -301,8 +309,8 @@ class _RegisterFormState extends State<RegisterForm> {
             child: FilledButton(
               onPressed: _submit,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF2F7DF6),
-                foregroundColor: Colors.white,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -324,14 +332,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 Text(
                   '¿Ya tienes cuenta?',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: const Color(0xFF30436A),
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 TextButton(
                   onPressed: widget.onSwitchToLogin,
                   style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFF2F7DF6),
+                    foregroundColor: colorScheme.primary,
                     padding: EdgeInsets.zero,
                     minimumSize: const Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,

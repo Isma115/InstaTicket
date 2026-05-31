@@ -146,6 +146,8 @@ class _EditTicketDialogState extends State<EditTicketDialog> {
   @override
   Widget build(BuildContext context) {
     final compactLayout = MediaQuery.of(context).size.width < 430;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(
@@ -156,12 +158,14 @@ class _EditTicketDialogState extends State<EditTicketDialog> {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 540),
         decoration: BoxDecoration(
-          color: const Color(0xFFF7FAFC),
+          color: isDark
+              ? colorScheme.surfaceContainerHigh
+              : colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0xFFDCE5EE)),
-          boxShadow: const <BoxShadow>[
+          border: Border.all(color: colorScheme.outlineVariant),
+          boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Color(0x1E173B5E),
+              color: colorScheme.shadow.withOpacity(isDark ? 0.65 : 0.18),
               blurRadius: 28,
               offset: Offset(0, 18),
             ),
@@ -268,9 +272,9 @@ class _EditTicketDialogState extends State<EditTicketDialog> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorScheme.surfaceContainerLowest,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFFD9E4EE)),
+                      border: Border.all(color: colorScheme.outlineVariant),
                     ),
                     child: Row(
                       children: <Widget>[
@@ -284,7 +288,7 @@ class _EditTicketDialogState extends State<EditTicketDialog> {
                             'Los cambios se guardan en backend y mantienen el chat del ticket.',
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: const Color(0xFF5A7088),
+                                      color: colorScheme.onSurfaceVariant,
                                       height: 1.4,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -307,7 +311,7 @@ class _EditTicketDialogState extends State<EditTicketDialog> {
                         child: FilledButton(
                           onPressed: _submit,
                           style: FilledButton.styleFrom(
-                            backgroundColor: const Color(0xFF173B5E),
+                            backgroundColor: colorScheme.primary,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
@@ -335,6 +339,8 @@ class _EditDialogHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -346,7 +352,7 @@ class _EditDialogHeader extends StatelessWidget {
               Text(
                 'Editar ticket',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: const Color(0xFF173B5E),
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
                     ),
               ),
@@ -358,9 +364,9 @@ class _EditDialogHeader extends StatelessWidget {
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
           style: IconButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF173B5E),
-            side: const BorderSide(color: Color(0xFFD9E4EE)),
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            foregroundColor: colorScheme.onSurface,
+            side: BorderSide(color: colorScheme.outlineVariant),
           ),
           icon: const Icon(Icons.close_rounded),
           tooltip: 'Cerrar',
@@ -419,16 +425,16 @@ class _EditPrioritySelector extends StatelessWidget {
   final String selectedPriority;
   final ValueChanged<String> onSelected;
 
-  Color _backgroundColor(String priority) {
+  Color _backgroundColor(String priority, {required bool isDark}) {
     switch (priority) {
       case 'Alta':
-        return const Color(0xFFFFF1E2);
+        return isDark ? const Color(0xFF41311F) : const Color(0xFFFFF1E2);
       case 'Media':
-        return const Color(0xFFFFF3D6);
+        return isDark ? const Color(0xFF45361C) : const Color(0xFFFFF3D6);
       case 'Baja':
-        return const Color(0xFFEDF9F2);
+        return isDark ? const Color(0xFF1C3A2C) : const Color(0xFFEDF9F2);
       default:
-        return const Color(0xFFF1F5F9);
+        return isDark ? const Color(0xFF223247) : const Color(0xFFF1F5F9);
     }
   }
 
@@ -447,13 +453,16 @@ class _EditPrioritySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           'Prioridad',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: const Color(0xFF173B5E),
+                color: colorScheme.onSurface,
                 fontWeight: FontWeight.w700,
               ),
         ),
@@ -466,7 +475,7 @@ class _EditPrioritySelector extends StatelessWidget {
                 (priority) => ChoiceChip(
                   label: Text(priority),
                   selected: priority == selectedPriority,
-                  backgroundColor: _backgroundColor(priority),
+                  backgroundColor: _backgroundColor(priority, isDark: isDark),
                   selectedColor: _foregroundColor(priority).withOpacity(0.14),
                   labelStyle: TextStyle(
                     color: _foregroundColor(priority),

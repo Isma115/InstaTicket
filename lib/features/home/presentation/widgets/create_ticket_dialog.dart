@@ -150,6 +150,8 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final compactLayout = mediaQuery.size.width < 430;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(
@@ -160,12 +162,14 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 540),
         decoration: BoxDecoration(
-          color: const Color(0xFFF7FAFC),
+          color: isDark
+              ? colorScheme.surfaceContainerHigh
+              : colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0xFFDCE5EE)),
-          boxShadow: const <BoxShadow>[
+          border: Border.all(color: colorScheme.outlineVariant),
+          boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Color(0x1E173B5E),
+              color: colorScheme.shadow.withOpacity(isDark ? 0.65 : 0.18),
               blurRadius: 28,
               offset: Offset(0, 18),
             ),
@@ -291,7 +295,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
                     subtitle: const Text(
                       'Guardará esta preferencia en el ticket de backend.',
                     ),
-                    activeColor: const Color(0xFF2457F5),
+                    activeColor: colorScheme.secondary,
                     onChanged: (value) {
                       setState(() {
                         _notifyByEmail = value;
@@ -305,7 +309,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
                     subtitle: const Text(
                       'Marca el ticket para seguimiento prioritario.',
                     ),
-                    activeColor: const Color(0xFF2457F5),
+                    activeColor: colorScheme.tertiary,
                     onChanged: (value) {
                       setState(() {
                         _needsFollowUp = value;
@@ -326,7 +330,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
                         child: FilledButton(
                           onPressed: _submit,
                           style: FilledButton.styleFrom(
-                            backgroundColor: const Color(0xFF173B5E),
+                            backgroundColor: colorScheme.primary,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
@@ -358,6 +362,8 @@ class _DialogHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -369,7 +375,7 @@ class _DialogHeader extends StatelessWidget {
               Text(
                 actionLabel,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: const Color(0xFF173B5E),
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
                     ),
               ),
@@ -381,9 +387,9 @@ class _DialogHeader extends StatelessWidget {
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
           style: IconButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF173B5E),
-            side: const BorderSide(color: Color(0xFFD9E4EE)),
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            foregroundColor: colorScheme.onSurface,
+            side: BorderSide(color: colorScheme.outlineVariant),
           ),
           icon: const Icon(Icons.close_rounded),
           tooltip: 'Cerrar',
@@ -442,18 +448,18 @@ class _PrioritySelector extends StatelessWidget {
   final String selectedPriority;
   final ValueChanged<String> onSelected;
 
-  Color _backgroundColor(String priority) {
+  Color _backgroundColor(String priority, {required bool isDark}) {
     switch (priority) {
       case 'Urgente':
-        return const Color(0xFFFFEEE9);
+        return isDark ? const Color(0xFF402322) : const Color(0xFFFFEEE9);
       case 'Alta':
-        return const Color(0xFFFFF1E2);
+        return isDark ? const Color(0xFF41311F) : const Color(0xFFFFF1E2);
       case 'Media':
-        return const Color(0xFFEDF4FF);
+        return isDark ? const Color(0xFF1F3049) : const Color(0xFFEDF4FF);
       case 'Baja':
-        return const Color(0xFFEDF9F2);
+        return isDark ? const Color(0xFF1C3A2C) : const Color(0xFFEDF9F2);
       default:
-        return const Color(0xFFF1F5F9);
+        return isDark ? const Color(0xFF223247) : const Color(0xFFF1F5F9);
     }
   }
 
@@ -474,13 +480,16 @@ class _PrioritySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           'Prioridad',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: const Color(0xFF173B5E),
+                color: colorScheme.onSurface,
                 fontWeight: FontWeight.w700,
               ),
         ),
@@ -493,7 +502,7 @@ class _PrioritySelector extends StatelessWidget {
                 (priority) => ChoiceChip(
                   label: Text(priority),
                   selected: priority == selectedPriority,
-                  backgroundColor: _backgroundColor(priority),
+                  backgroundColor: _backgroundColor(priority, isDark: isDark),
                   selectedColor: _foregroundColor(priority).withOpacity(0.14),
                   labelStyle: TextStyle(
                     color: _foregroundColor(priority),
@@ -521,13 +530,15 @@ class _AttachmentsPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFD7E2EC)),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: Row(
         children: <Widget>[
@@ -535,12 +546,12 @@ class _AttachmentsPlaceholder extends StatelessWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: const Color(0xFFEAF3FF),
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.attach_file_rounded,
-              color: Color(0xFF1F6BFF),
+              color: colorScheme.primary,
             ),
           ),
           const SizedBox(width: 14),
@@ -551,7 +562,7 @@ class _AttachmentsPlaceholder extends StatelessWidget {
                 Text(
                   'Adjuntos',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: const Color(0xFF173B5E),
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w700,
                       ),
                 ),
@@ -559,7 +570,7 @@ class _AttachmentsPlaceholder extends StatelessWidget {
                 Text(
                   'Zona visual preparada para integrar subida de capturas y documentos.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF70839A),
+                        color: colorScheme.onSurfaceVariant,
                       ),
                 ),
               ],

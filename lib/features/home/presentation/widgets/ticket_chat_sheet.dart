@@ -167,6 +167,8 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 180),
@@ -176,8 +178,10 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
         child: FractionallySizedBox(
           heightFactor: 0.9,
           child: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFF8FBFD),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? colorScheme.surfaceContainerHigh
+                  : colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
             ),
             child: Column(
@@ -233,14 +237,16 @@ class _ChatSheetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerLow,
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFFDDE7F0),
+            color: colorScheme.outlineVariant,
           ),
         ),
       ),
@@ -250,7 +256,7 @@ class _ChatSheetHeader extends StatelessWidget {
             width: 54,
             height: 5,
             decoration: BoxDecoration(
-              color: const Color(0xFFD2DEE8),
+              color: colorScheme.outlineVariant,
               borderRadius: BorderRadius.circular(999),
             ),
           ),
@@ -265,7 +271,7 @@ class _ChatSheetHeader extends StatelessWidget {
                     Text(
                       ticket.title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: const Color(0xFF173B5E),
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w800,
                           ),
                     ),
@@ -281,7 +287,7 @@ class _ChatSheetHeader extends StatelessWidget {
                     Text(
                       '$messageCount mensajes en esta conversacion',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: const Color(0xFF687C91),
+                            color: colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -292,8 +298,8 @@ class _ChatSheetHeader extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.close_rounded),
                 style: IconButton.styleFrom(
-                  backgroundColor: const Color(0xFFF2F6FA),
-                  foregroundColor: const Color(0xFF51677F),
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  foregroundColor: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -367,13 +373,20 @@ class _ChatMessageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCurrentUser = message.isCurrentUser;
-    final bubbleColor =
-        isCurrentUser ? const Color(0xFF1F6BFF) : const Color(0xFFFFFFFF);
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bubbleColor = isCurrentUser
+        ? colorScheme.primary
+        : (isDark
+            ? colorScheme.surfaceContainerHighest
+            : colorScheme.surfaceContainerLowest);
     final borderColor =
-        isCurrentUser ? const Color(0xFF1F6BFF) : const Color(0xFFDDE7F0);
-    final textColor = isCurrentUser ? Colors.white : const Color(0xFF173B5E);
-    final metaColor =
-        isCurrentUser ? const Color(0xFFD9E8FF) : const Color(0xFF6E8196);
+        isCurrentUser ? colorScheme.primary : colorScheme.outlineVariant;
+    final textColor =
+        isCurrentUser ? colorScheme.onPrimary : colorScheme.onSurface;
+    final metaColor = isCurrentUser
+        ? colorScheme.onPrimary.withOpacity(0.78)
+        : colorScheme.onSurfaceVariant;
 
     return Container(
       width: double.infinity,
@@ -406,8 +419,8 @@ class _ChatMessageTile extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: isCurrentUser
-                      ? const Color(0x33FFFFFF)
-                      : const Color(0xFFEAF2F8),
+                      ? colorScheme.onPrimary.withOpacity(0.22)
+                      : colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
@@ -432,8 +445,8 @@ class _ChatMessageTile extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isCurrentUser
-                      ? const Color(0x24FFFFFF)
-                      : const Color(0xFFF3F7FA),
+                      ? colorScheme.onPrimary.withOpacity(0.16)
+                      : colorScheme.surfaceContainerHigh,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
@@ -529,7 +542,7 @@ class _EmptyChatState extends StatelessWidget {
               'Este ticket aun no tiene comentarios',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: const Color(0xFF173B5E),
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w800,
                   ),
             ),
@@ -538,7 +551,7 @@ class _EmptyChatState extends StatelessWidget {
               'Usa el cuadro inferior para iniciar la conversacion del ticket.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF6A7C92),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     height: 1.45,
                   ),
             ),
@@ -570,12 +583,14 @@ class _ChatComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
         border: Border(
-          top: BorderSide(color: Color(0xFFDDE7F0)),
+          top: BorderSide(color: colorScheme.outlineVariant),
         ),
       ),
       child: Column(
@@ -586,7 +601,7 @@ class _ChatComposer extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFEAF3FF),
+                color: colorScheme.primaryContainer.withOpacity(0.48),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -595,7 +610,7 @@ class _ChatComposer extends StatelessWidget {
                     child: Text(
                       'Respondiendo a ${replyTarget!.authorName}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: const Color(0xFF1B4F85),
+                            color: colorScheme.primary,
                             fontWeight: FontWeight.w700,
                           ),
                     ),
@@ -605,8 +620,8 @@ class _ChatComposer extends StatelessWidget {
                     icon: const Icon(Icons.close_rounded, size: 18),
                     visualDensity: VisualDensity.compact,
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF1B4F85),
+                      backgroundColor: colorScheme.surfaceContainerLow,
+                      foregroundColor: colorScheme.primary,
                     ),
                   ),
                 ],
@@ -642,12 +657,12 @@ class _ChatComposer extends StatelessWidget {
                   ),
                 ),
                 child: isSending
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                         ),
                       )
                     : const Icon(Icons.send_rounded),

@@ -22,6 +22,8 @@ class DashboardSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
       width: width,
@@ -32,11 +34,11 @@ class DashboardSidebar extends StatelessWidget {
         collapsed ? 20 : 24,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         border: Border(
           right: BorderSide(
-            color: const Color(0xFFE9EDF5),
-            width: collapsed ? 1 : 1.2,
+            color: colorScheme.outline,
+            width: collapsed ? 1.2 : 1.4,
           ),
         ),
       ),
@@ -66,7 +68,7 @@ class DashboardSidebar extends StatelessWidget {
             ),
           ),
           Divider(
-            color: const Color(0xFFE8EDF5),
+            color: colorScheme.outlineVariant,
             height: 1,
             thickness: 1,
           ),
@@ -89,30 +91,30 @@ class _SidebarBrand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final logoSize = collapsed ? 52.0 : 60.0;
     final logo = Container(
       width: logoSize,
       height: logoSize,
       decoration: BoxDecoration(
+        color:
+            isDark ? colorScheme.surfaceContainerHigh : const Color(0xFFEAF2EC),
         borderRadius: BorderRadius.circular(18),
-        gradient: const LinearGradient(
-          colors: <Color>[
-            Color(0xFFEFF5FF),
-            Color(0xFFDCE9FF),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        border: Border.all(
+          color: colorScheme.outline,
+          width: 1.3,
         ),
       ),
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
           Transform.rotate(
-            angle: -0.2,
-            child: const Icon(
-              Icons.receipt_long,
+            angle: -0.1,
+            child: Icon(
+              Icons.widgets_rounded,
               size: 28,
-              color: Color(0xFF1F6BFF),
+              color: colorScheme.primary,
             ),
           ),
           Positioned(
@@ -122,14 +124,14 @@ class _SidebarBrand extends StatelessWidget {
               width: 18,
               height: 18,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF9AC0FF)),
+                border: Border.all(color: colorScheme.outlineVariant),
               ),
-              child: const Icon(
-                Icons.priority_high,
+              child: Icon(
+                Icons.bolt_rounded,
                 size: 12,
-                color: Color(0xFF1F6BFF),
+                color: colorScheme.primary,
               ),
             ),
           ),
@@ -154,10 +156,12 @@ class _SidebarEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final backgroundColor =
-        entry.highlighted ? const Color(0xFF1F6BFF) : Colors.transparent;
-    final foregroundColor =
-        entry.highlighted ? Colors.white : const Color(0xFF657697);
+        entry.highlighted ? colorScheme.primary : Colors.transparent;
+    final foregroundColor = entry.highlighted
+        ? colorScheme.onPrimary
+        : colorScheme.onSurfaceVariant;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
@@ -169,12 +173,17 @@ class _SidebarEntry extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(compact ? 16 : 18),
+        border: Border.all(
+          color: entry.highlighted
+              ? colorScheme.primary.withOpacity(0.45)
+              : colorScheme.outlineVariant,
+        ),
         boxShadow: entry.highlighted
             ? <BoxShadow>[
                 BoxShadow(
-                  color: const Color(0xFF1F6BFF).withOpacity(0.22),
-                  blurRadius: 22,
-                  offset: const Offset(0, 12),
+                  color: colorScheme.primary.withOpacity(0.16),
+                  blurRadius: 14,
+                  offset: const Offset(0, 8),
                 ),
               ]
             : null,
@@ -216,19 +225,21 @@ class _CollapsedSidebarFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Column(
         children: <Widget>[
           Container(
             width: 42,
             height: 42,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xFFF0F5FF),
+              color: colorScheme.primaryContainer,
             ),
-            child: const Icon(
-              Icons.person,
-              color: Color(0xFF1F6BFF),
+            child: Icon(
+              Icons.account_circle_outlined,
+              color: colorScheme.primary,
               size: 24,
             ),
           ),
@@ -241,9 +252,9 @@ class _CollapsedSidebarFooter extends StatelessWidget {
               minWidth: 30,
               minHeight: 30,
             ),
-            icon: const Icon(
-              Icons.keyboard_arrow_down,
-              color: Color(0xFF7C88A1),
+            icon: Icon(
+              Icons.logout_rounded,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

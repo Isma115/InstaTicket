@@ -2,8 +2,11 @@
 import 'package:flutter/material.dart';
 
 import 'app/app.dart';
+import 'core/data/theme_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ThemePreferences.instance.load();
   runApp(const InstaTicketApp());
 }
 // endregion

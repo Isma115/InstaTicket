@@ -179,17 +179,13 @@ class _AuthPageState extends State<AuthPage> {
   // region Componentes Página Autenticación: vista principal
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: <Color>[
-              Color(0xFFF4F7FD),
-              Color(0xFFEEF3FB),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF0C1612) : const Color(0xFFEFF2EC),
         ),
         child: SafeArea(
           child: _isRestoringSession
@@ -202,6 +198,7 @@ class _AuthPageState extends State<AuthPage> {
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 520),
                       child: Card(
+                        color: colorScheme.surfaceContainerLow,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(28, 30, 28, 34),
                           child: LoginForm(

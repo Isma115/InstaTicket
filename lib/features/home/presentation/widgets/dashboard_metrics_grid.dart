@@ -68,6 +68,8 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     final compactCard = singleColumnLayout;
     final verticalPadding = compactCard ? 12.0 : (denseLayout ? 5.0 : 14.0);
     final horizontalPadding = compactCard ? 16.0 : (denseLayout ? 8.0 : 14.0);
@@ -81,9 +83,11 @@ class _MetricCard extends StatelessWidget {
         vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FBFF),
+        color: isDark
+            ? colorScheme.surfaceContainerHigh
+            : colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE8EEF7)),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: compactCard
           ? Row(
@@ -100,7 +104,7 @@ class _MetricCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF58708F),
+                      color: colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -109,7 +113,7 @@ class _MetricCard extends StatelessWidget {
                 Text(
                   metric.value,
                   style: theme.textTheme.titleLarge?.copyWith(
-                    color: const Color(0xFF153553),
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -134,7 +138,7 @@ class _MetricCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: const Color(0xFF153553),
+                              color: colorScheme.onSurface,
                               fontWeight: FontWeight.w800,
                               fontSize: 24,
                             ),
@@ -145,7 +149,7 @@ class _MetricCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: const Color(0xFF58708F),
+                              color: colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                               height: 1.0,
@@ -172,7 +176,7 @@ class _MetricCard extends StatelessWidget {
                               ? theme.textTheme.titleMedium
                               : theme.textTheme.titleLarge)
                           ?.copyWith(
-                        color: const Color(0xFF153553),
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w800,
                         fontSize: denseLayout ? 20 : null,
                       ),
@@ -184,7 +188,7 @@ class _MetricCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF58708F),
+                        color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                         fontSize: denseLayout ? 11 : null,
                         height: denseLayout ? 1.0 : 1.1,

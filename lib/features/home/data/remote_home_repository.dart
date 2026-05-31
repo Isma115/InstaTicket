@@ -39,20 +39,20 @@ class RemoteHomeRepository {
       menuEntries: const <DashboardMenuEntry>[
         DashboardMenuEntry(
           label: 'Inicio',
-          icon: Icons.home_rounded,
+          icon: Icons.space_dashboard_outlined,
           highlighted: true,
         ),
         DashboardMenuEntry(
           label: 'Tickets',
-          icon: Icons.inventory_2_outlined,
+          icon: Icons.confirmation_number_outlined,
         ),
         DashboardMenuEntry(
           label: 'Grupos',
-          icon: Icons.groups_2_outlined,
+          icon: Icons.hub_outlined,
         ),
         DashboardMenuEntry(
           label: 'Perfil',
-          icon: Icons.person_outline_rounded,
+          icon: Icons.manage_accounts_outlined,
         ),
       ],
       supportGroups: supportGroups,
@@ -218,30 +218,30 @@ class RemoteHomeRepository {
       DashboardMetric(
         title: 'Abiertos',
         value: abiertos,
-        icon: Icons.folder_outlined,
-        iconColor: const Color(0xFF1F6BFF),
-        iconBackgroundColor: const Color(0xFFEDF4FF),
+        icon: Icons.drafts_outlined,
+        iconColor: const Color(0xFF0E7A5F),
+        iconBackgroundColor: const Color(0xFFE9F5EF),
       ),
       DashboardMetric(
         title: 'En progreso',
         value: enProgreso,
-        icon: Icons.access_time_outlined,
-        iconColor: const Color(0xFFFFAF1A),
-        iconBackgroundColor: const Color(0xFFFFF7E7),
+        icon: Icons.pending_actions_outlined,
+        iconColor: const Color(0xFFBC5A35),
+        iconBackgroundColor: const Color(0xFFFCEEE8),
       ),
       DashboardMetric(
         title: 'Resueltos',
         value: resueltos,
-        icon: Icons.check_outlined,
-        iconColor: const Color(0xFF20B46A),
-        iconBackgroundColor: const Color(0xFFEEFBF3),
+        icon: Icons.verified_outlined,
+        iconColor: const Color(0xFF24805F),
+        iconBackgroundColor: const Color(0xFFE9F6EF),
       ),
       DashboardMetric(
         title: 'Total tickets',
         value: total,
-        icon: Icons.bar_chart_outlined,
-        iconColor: const Color(0xFF6B5AF3),
-        iconBackgroundColor: const Color(0xFFF3F0FF),
+        icon: Icons.query_stats_outlined,
+        iconColor: const Color(0xFFAA7A19),
+        iconBackgroundColor: const Color(0xFFFBF4E1),
       ),
     ];
   }
@@ -351,15 +351,15 @@ class RemoteHomeRepository {
         title: 'Mesa principal',
         subtitle: 'Cobertura diaria $suffix',
         membersLabel: '0 miembros',
-        icon: Icons.support_agent_rounded,
-        accentColor: const Color(0xFF2457F5),
+        icon: Icons.support_outlined,
+        accentColor: const Color(0xFF0E7A5F),
       ),
       const DashboardSupportGroup(
         title: 'Incidencias',
         subtitle: 'Escalado de casos críticos',
         membersLabel: '0 miembros',
-        icon: Icons.warning_amber_rounded,
-        accentColor: Color(0xFFE58B00),
+        icon: Icons.policy_outlined,
+        accentColor: Color(0xFFBC5A35),
       ),
     ];
   }
@@ -414,20 +414,20 @@ class RemoteHomeRepository {
   _GroupPalette _groupPalette(int index) {
     const palettes = <_GroupPalette>[
       _GroupPalette(
-        icon: Icons.support_agent_rounded,
-        color: Color(0xFF2457F5),
+        icon: Icons.support_outlined,
+        color: Color(0xFF0E7A5F),
       ),
       _GroupPalette(
-        icon: Icons.settings_suggest_rounded,
-        color: Color(0xFF1273EA),
+        icon: Icons.handyman_outlined,
+        color: Color(0xFF3A866F),
       ),
       _GroupPalette(
-        icon: Icons.security_rounded,
-        color: Color(0xFF20B46A),
+        icon: Icons.shield_moon_outlined,
+        color: Color(0xFFAA7A19),
       ),
       _GroupPalette(
-        icon: Icons.inventory_2_outlined,
-        color: Color(0xFFE58B00),
+        icon: Icons.inventory_outlined,
+        color: Color(0xFFBC5A35),
       ),
     ];
 
