@@ -1,4 +1,4 @@
-// region Componentes Dashboard: barra lateral izquierda
+// #region Dashboard | Vista | Barra lateral izquierda
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/auth_user.dart';
@@ -79,9 +79,9 @@ class DashboardSidebar extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: cabecera de marca del panel lateral
+// #region Dashboard | Vista | Cabecera de marca del panel lateral
 class _SidebarBrand extends StatelessWidget {
   const _SidebarBrand({
     required this.collapsed,
@@ -142,9 +142,9 @@ class _SidebarBrand extends StatelessWidget {
     return Center(child: logo);
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: opción de navegación lateral
+// #region Dashboard | Vista | Opcion de navegacion lateral
 class _SidebarEntry extends StatelessWidget {
   const _SidebarEntry({
     required this.entry,
@@ -214,8 +214,9 @@ class _SidebarEntry extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
+// #region Dashboard | Vista | Pie del panel lateral colapsado
 class _CollapsedSidebarFooter extends StatelessWidget {
   const _CollapsedSidebarFooter({
     required this.onLogout,
@@ -262,3 +263,4 @@ class _CollapsedSidebarFooter extends StatelessWidget {
     );
   }
 }
+// #endregion

@@ -1,4 +1,4 @@
-// region Lógica Dashboard: modelos de datos para el panel principal
+// #region Dashboard | Funcionalidad | Modelos de datos para el panel principal
 import 'package:flutter/material.dart';
 
 class DashboardMetric {
@@ -149,4 +149,4 @@ class DashboardViewData {
   final List<DashboardSupportGroup> supportGroups;
   final String floatingActionLabel;
 }
-// endregion
+// #endregion

@@ -1,4 +1,4 @@
-// region Lógica Aplicación: punto de entrada principal
+// #region Aplicacion | Funcionalidad | Punto de entrada principal
 import 'package:flutter/material.dart';
 
 import 'app/app.dart';
@@ -9,4 +9,4 @@ void main() async {
   await ThemePreferences.instance.load();
   runApp(const InstaTicketApp());
 }
-// endregion
+// #endregion

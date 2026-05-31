@@ -1,6 +1,8 @@
-// region Componentes Página Autenticación: formulario de inicio de sesión
+// #region Autenticacion | Vista | Importaciones del formulario de login
 import 'package:flutter/material.dart';
+// #endregion
 
+// #region LoginForm | Vista | Widget del formulario de inicio de sesion
 class LoginForm extends StatefulWidget {
   const LoginForm({
     required this.formKey,
@@ -20,7 +22,9 @@ class LoginForm extends StatefulWidget {
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
+// #endregion
 
+// #region _LoginFormState | Vista | Estado del formulario de inicio de sesion
 class _LoginFormState extends State<LoginForm> {
   bool _obscurePassword = true;
 
@@ -190,9 +194,9 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Lógica Página Autenticación: validaciones de inicio de sesión
+// #region Autenticacion | Funcionalidad | Validaciones de inicio de sesion
 String? _validateEmail(String? value) {
   final text = value?.trim() ?? '';
 
@@ -216,4 +220,4 @@ String? _validatePassword(String? value) {
 
   return null;
 }
-// endregion
+// #endregion

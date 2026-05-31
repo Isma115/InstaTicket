@@ -1,11 +1,13 @@
-// region Lógica Dashboard: repositorio remoto para métricas, tickets y perfil
+// #region Dashboard | Backend | Importaciones del repositorio remoto
 import 'package:flutter/material.dart';
 
 import '../../../core/data/api_client.dart';
 import '../../../core/models/auth_user.dart';
 import '../../../core/models/user_role.dart';
 import '../domain/models/dashboard_models.dart';
+// #endregion
 
+// #region RemoteHomeRepository | Backend | Repositorio remoto para dashboard, tickets y perfil
 class RemoteHomeRepository {
   RemoteHomeRepository._();
 
@@ -496,7 +498,9 @@ class RemoteHomeRepository {
     }
   }
 }
+// #endregion
 
+// #region _StatusPalette | Funcionalidad | Paleta de colores por estado
 class _StatusPalette {
   const _StatusPalette({
     required this.foreground,
@@ -508,7 +512,9 @@ class _StatusPalette {
   final Color background;
   final Color accent;
 }
+// #endregion
 
+// #region _PriorityPalette | Funcionalidad | Paleta de colores por prioridad
 class _PriorityPalette {
   const _PriorityPalette({
     required this.foreground,
@@ -518,7 +524,9 @@ class _PriorityPalette {
   final Color foreground;
   final Color background;
 }
+// #endregion
 
+// #region _GroupPalette | Funcionalidad | Paleta de colores e iconos por grupo
 class _GroupPalette {
   const _GroupPalette({
     required this.icon,
@@ -528,4 +536,4 @@ class _GroupPalette {
   final IconData icon;
   final Color color;
 }
-// endregion
+// #endregion

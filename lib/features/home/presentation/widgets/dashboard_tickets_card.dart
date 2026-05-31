@@ -1,8 +1,10 @@
-// region Componentes Dashboard: listado de tickets recientes
+// #region Dashboard | Vista | Importaciones de tarjetas de tickets
 import 'package:flutter/material.dart';
 
 import '../../domain/models/dashboard_models.dart';
+// #endregion
 
+// #region DashboardTicketsCard | Vista | Widget contenedor del listado de tickets
 class DashboardTicketsCard extends StatefulWidget {
   const DashboardTicketsCard({
     required this.tickets,
@@ -22,7 +24,9 @@ class DashboardTicketsCard extends StatefulWidget {
   @override
   State<DashboardTicketsCard> createState() => _DashboardTicketsCardState();
 }
+// #endregion
 
+// #region _DashboardTicketsCardState | Vista | Estado del listado de tickets
 class _DashboardTicketsCardState extends State<DashboardTicketsCard> {
   final Set<String> _expandedTicketIds = <String>{};
   final Set<String> _collapsedDefaultTicketIds = <String>{};
@@ -109,9 +113,9 @@ class _DashboardTicketsCardState extends State<DashboardTicketsCard> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: fila individual de ticket
+// #region _TicketRow | Vista | Fila individual de ticket expandible
 class _TicketRow extends StatelessWidget {
   const _TicketRow({
     required this.ticket,
@@ -309,8 +313,9 @@ class _TicketRow extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
+// #region _headerBackgroundColor | Funcionalidad | Color de fondo segun estado/prioridad
 Color _headerBackgroundColor(
   DashboardTicket ticket, {
   required ColorScheme colorScheme,
@@ -331,7 +336,9 @@ Color _headerBackgroundColor(
       return ticket.accentColor.withOpacity(isDark ? 0.24 : 0.16);
   }
 }
+// #endregion
 
+// #region _TicketMetaLine | Vista | Linea de metadato del ticket
 class _TicketMetaLine extends StatelessWidget {
   const _TicketMetaLine({
     required this.label,
@@ -368,7 +375,9 @@ class _TicketMetaLine extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _TicketActionIcon | Vista | Icono de accion del ticket
 class _TicketActionIcon extends StatelessWidget {
   const _TicketActionIcon({
     required this.icon,
@@ -440,3 +449,4 @@ class _TicketActionIcon extends StatelessWidget {
     );
   }
 }
+// #endregion

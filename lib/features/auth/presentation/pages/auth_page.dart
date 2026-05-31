@@ -1,4 +1,4 @@
-// region Componentes Página Autenticación: imports
+// #region Autenticacion | Vista | Importaciones de la pagina de autenticacion
 import 'package:flutter/material.dart';
 
 import '../../../../core/data/last_session_storage.dart';
@@ -6,16 +6,18 @@ import '../../../../core/data/remote_auth_repository.dart';
 import '../../../../core/models/auth_user.dart';
 import '../../../home/presentation/pages/role_home_page.dart';
 import '../widgets/login_form.dart';
-// endregion
+// #endregion
 
-// region Lógica Página Autenticación: estado y control de formularios
+// #region AuthPage | Vista | Widget de la pagina de autenticacion
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
 
   @override
   State<AuthPage> createState() => _AuthPageState();
 }
+// #endregion
 
+// #region _AuthPageState | Vista | Estado y logica de la pagina de autenticacion
 class _AuthPageState extends State<AuthPage> {
   final RemoteAuthRepository _repository = RemoteAuthRepository.instance;
   final LastSessionStorage _lastSessionStorage = LastSessionStorage.instance;
@@ -174,9 +176,7 @@ class _AuthPageState extends State<AuthPage> {
       }
     }
   }
-  // endregion
 
-  // region Componentes Página Autenticación: vista principal
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -219,5 +219,5 @@ class _AuthPageState extends State<AuthPage> {
       ),
     );
   }
-  // endregion
 }
+// #endregion

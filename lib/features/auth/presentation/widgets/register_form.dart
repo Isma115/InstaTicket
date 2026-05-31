@@ -1,6 +1,8 @@
-// region Componentes Página Autenticación: formulario de registro
+// #region Autenticacion | Vista | Importaciones del formulario de registro
 import 'package:flutter/material.dart';
+// #endregion
 
+// #region RegisterForm | Vista | Widget del formulario de registro
 class RegisterForm extends StatefulWidget {
   const RegisterForm({
     required this.formKey,
@@ -22,7 +24,9 @@ class RegisterForm extends StatefulWidget {
   @override
   State<RegisterForm> createState() => _RegisterFormState();
 }
+// #endregion
 
+// #region _RegisterFormState | Vista | Estado del formulario de registro
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -379,9 +383,9 @@ class _RegisterFormState extends State<RegisterForm> {
     widget.onSubmit();
   }
 }
-// endregion
+// #endregion
 
-// region Lógica Página Autenticación: validaciones de registro
+// #region Autenticacion | Funcionalidad | Validaciones de registro
 String? _validateName(String? value) {
   final text = value?.trim() ?? '';
 
@@ -437,4 +441,4 @@ String? _validateConfirmPassword(String? value, String password) {
 
   return null;
 }
-// endregion
+// #endregion

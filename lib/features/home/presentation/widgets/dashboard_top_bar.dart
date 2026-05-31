@@ -1,4 +1,4 @@
-// region Componentes Dashboard: barra superior del contenido
+// #region Dashboard | Vista | Barra superior del contenido
 import 'package:flutter/material.dart';
 
 class DashboardTopBar extends StatelessWidget {
@@ -91,4 +91,4 @@ class DashboardTopBar extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion

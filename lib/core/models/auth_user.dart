@@ -1,4 +1,4 @@
-// region Lógica Backend Frontend: modelo de usuario autenticado
+// #region Autenticacion | Funcionalidad | Modelo de usuario autenticado
 import 'user_role.dart';
 
 class AuthUser {
@@ -50,4 +50,4 @@ class AuthUser {
     );
   }
 }
-// endregion
+// #endregion

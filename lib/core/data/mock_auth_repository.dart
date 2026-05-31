@@ -1,4 +1,4 @@
-// region Lógica Backend Frontend: repositorio mock de autenticación
+// #region Autenticacion | Funcionalidad | Repositorio mock de autenticacion
 import 'dart:collection';
 
 import '../models/auth_user.dart';
@@ -84,4 +84,4 @@ class MockAuthRepository {
     return user;
   }
 }
-// endregion
+// #endregion

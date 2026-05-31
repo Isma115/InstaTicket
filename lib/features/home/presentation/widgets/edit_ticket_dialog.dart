@@ -1,10 +1,10 @@
-// region Componentes Dashboard: imports del popup de editar ticket
+// #region Dashboard | Vista | Imports del popup de editar ticket
 import 'package:flutter/material.dart';
 
 import '../../domain/models/dashboard_models.dart';
-// endregion
+// #endregion
 
-// region Componentes Dashboard: popup de editar ticket
+// #region Dashboard | Vista | Popup de editar ticket
 class EditTicketDialog extends StatefulWidget {
   const EditTicketDialog({
     required this.ticket,
@@ -16,9 +16,9 @@ class EditTicketDialog extends StatefulWidget {
   @override
   State<EditTicketDialog> createState() => _EditTicketDialogState();
 }
-// endregion
+// #endregion
 
-// region Lógica Dashboard: estado del popup de editar ticket
+// #region Dashboard | Funcionalidad | Estado del popup de editar ticket
 class _EditTicketDialogState extends State<EditTicketDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
@@ -331,9 +331,9 @@ class _EditTicketDialogState extends State<EditTicketDialog> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: cabecera del popup de editar ticket
+// #region Dashboard | Vista | Cabecera del popup de editar ticket
 class _EditDialogHeader extends StatelessWidget {
   const _EditDialogHeader();
 
@@ -375,9 +375,9 @@ class _EditDialogHeader extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: distribucion adaptable del popup de editar ticket
+// #region Dashboard | Vista | Distribucion adaptable del popup de editar ticket
 class _EditResponsiveFields extends StatelessWidget {
   const _EditResponsiveFields({
     required this.compactLayout,
@@ -411,9 +411,9 @@ class _EditResponsiveFields extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: selector de prioridad del popup de editar ticket
+// #region Dashboard | Vista | Selector de prioridad del popup de editar ticket
 class _EditPrioritySelector extends StatelessWidget {
   const _EditPrioritySelector({
     required this.priorities,
@@ -495,4 +495,4 @@ class _EditPrioritySelector extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion

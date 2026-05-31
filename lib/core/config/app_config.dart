@@ -1,4 +1,4 @@
-// region Lógica Configuración Frontend: configuración de API remota
+// #region Configuracion | Funcionalidad | Configuracion de API remota
 class AppConfig {
   AppConfig._();
   static const _macLanApiBaseUrl = 'http://192.168.1.60:4000';
@@ -23,4 +23,4 @@ class AppConfig {
     return trimmed;
   }
 }
-// endregion
+// #endregion

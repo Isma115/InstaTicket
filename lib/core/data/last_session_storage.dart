@@ -1,4 +1,4 @@
-// region Lógica Backend Frontend: persistencia local de la ultima sesion
+// #region Sesion | Funcionalidad | Persistencia local de la ultima sesion
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LastSessionCredentials {
@@ -51,4 +51,4 @@ class LastSessionStorage {
     await preferences.remove(_passwordKey);
   }
 }
-// endregion
+// #endregion

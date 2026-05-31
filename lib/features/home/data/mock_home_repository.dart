@@ -1,4 +1,4 @@
-// region Lógica Dashboard: repositorio mock para métricas y tickets
+// #region Dashboard | Funcionalidad | Repositorio mock para metricas y tickets
 import 'package:flutter/material.dart';
 
 import '../../../core/models/auth_user.dart';
@@ -472,4 +472,4 @@ class MockHomeRepository {
     }
   }
 }
-// endregion
+// #endregion

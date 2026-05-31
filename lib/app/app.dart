@@ -1,4 +1,4 @@
-// region Componentes Aplicación: configuración base de MaterialApp
+// #region Aplicacion | Vista | Configuracion base de MaterialApp
 import 'package:flutter/material.dart';
 
 import '../core/data/theme_preferences.dart';
@@ -44,4 +44,4 @@ class _InstaTicketAppState extends State<InstaTicketApp> {
     );
   }
 }
-// endregion
+// #endregion

@@ -1,4 +1,4 @@
-// region Lógica Backend Frontend: persistencia local del tema visual
+// #region Tema | Funcionalidad | Persistencia local del tema visual
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,4 +48,4 @@ class ThemePreferences {
     await save(next);
   }
 }
-// endregion
+// #endregion

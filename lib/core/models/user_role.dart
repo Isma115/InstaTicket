@@ -1,4 +1,4 @@
-// region Lógica Backend Frontend: modelo de rol de usuario
+// #region Autenticacion | Funcionalidad | Modelo de rol de usuario
 enum UserRole {
   tecnico,
   admin,
@@ -26,4 +26,4 @@ enum UserRole {
     }
   }
 }
-// endregion
+// #endregion

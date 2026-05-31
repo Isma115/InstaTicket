@@ -1,4 +1,4 @@
-// region Estilos Aplicación: tema principal
+// #region Aplicacion | Estilo | Tema principal claro y oscuro
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -210,4 +210,4 @@ class AppTheme {
 
   static ThemeData build() => buildLight();
 }
-// endregion
+// #endregion

@@ -1,11 +1,11 @@
-// region Componentes Dashboard: imports del popup de crear ticket
+// #region Dashboard | Vista | Imports del popup de crear ticket
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/auth_user.dart';
 import '../../../../core/models/user_role.dart';
-// endregion
+// #endregion
 
-// region Lógica Dashboard: modelo del popup de crear ticket
+// #region Dashboard | Funcionalidad | Modelo del popup de crear ticket
 class CreateTicketDraft {
   const CreateTicketDraft({
     required this.title,
@@ -25,9 +25,9 @@ class CreateTicketDraft {
   final bool notifyByEmail;
   final bool needsFollowUp;
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: popup de crear ticket
+// #region Dashboard | Vista | Popup de crear ticket
 class CreateTicketDialog extends StatefulWidget {
   const CreateTicketDialog({
     required this.user,
@@ -41,9 +41,9 @@ class CreateTicketDialog extends StatefulWidget {
   @override
   State<CreateTicketDialog> createState() => _CreateTicketDialogState();
 }
-// endregion
+// #endregion
 
-// region Lógica Dashboard: estado del popup de crear ticket
+// #region Dashboard | Funcionalidad | Estado del popup de crear ticket
 class _CreateTicketDialogState extends State<CreateTicketDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
@@ -350,9 +350,9 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: cabecera del popup de crear ticket
+// #region Dashboard | Vista | Cabecera del popup de crear ticket
 class _DialogHeader extends StatelessWidget {
   const _DialogHeader({
     required this.actionLabel,
@@ -398,9 +398,9 @@ class _DialogHeader extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: distribucion adaptable del popup de crear ticket
+// #region Dashboard | Vista | Distribucion adaptable del popup de crear ticket
 class _ResponsiveFields extends StatelessWidget {
   const _ResponsiveFields({
     required this.compactLayout,
@@ -434,9 +434,9 @@ class _ResponsiveFields extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: selector de prioridad del popup de crear ticket
+// #region Dashboard | Vista | Selector de prioridad del popup de crear ticket
 class _PrioritySelector extends StatelessWidget {
   const _PrioritySelector({
     required this.priorities,
@@ -522,9 +522,9 @@ class _PrioritySelector extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: tarjeta de adjuntos del popup de crear ticket
+// #region Dashboard | Vista | Tarjeta de adjuntos del popup de crear ticket
 class _AttachmentsPlaceholder extends StatelessWidget {
   const _AttachmentsPlaceholder();
 
@@ -586,4 +586,4 @@ class _AttachmentsPlaceholder extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion

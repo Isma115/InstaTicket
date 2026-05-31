@@ -1,11 +1,11 @@
-// region Componentes Dashboard: imports del chat por ticket
+// #region Dashboard | Vista | Imports del chat por ticket
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/auth_user.dart';
 import '../../domain/models/dashboard_models.dart';
-// endregion
+// #endregion
 
-// region Componentes Dashboard: panel de chat por ticket
+// #region Dashboard | Vista | Panel de chat por ticket
 class TicketChatSheet extends StatefulWidget {
   const TicketChatSheet({
     required this.ticket,
@@ -24,9 +24,9 @@ class TicketChatSheet extends StatefulWidget {
   @override
   State<TicketChatSheet> createState() => _TicketChatSheetState();
 }
-// endregion
+// #endregion
 
-// region Lógica Dashboard: estado del chat por ticket
+// #region Dashboard | Funcionalidad | Estado del chat por ticket
 class _TicketChatSheetState extends State<TicketChatSheet> {
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
@@ -223,9 +223,9 @@ class _TicketChatSheetState extends State<TicketChatSheet> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: cabecera del chat por ticket
+// #region Dashboard | Vista | Cabecera del chat por ticket
 class _ChatSheetHeader extends StatelessWidget {
   const _ChatSheetHeader({
     required this.ticket,
@@ -309,9 +309,9 @@ class _ChatSheetHeader extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: listado de mensajes del chat por ticket
+// #region Dashboard | Vista | Listado de mensajes del chat por ticket
 class _ChatMessageBranch extends StatelessWidget {
   const _ChatMessageBranch({
     required this.message,
@@ -561,9 +561,9 @@ class _EmptyChatState extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: editor de comentarios del chat por ticket
+// #region Dashboard | Vista | Editor de comentarios del chat por ticket
 class _ChatComposer extends StatelessWidget {
   const _ChatComposer({
     required this.controller,
@@ -674,4 +674,4 @@ class _ChatComposer extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion

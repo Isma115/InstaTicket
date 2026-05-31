@@ -1,4 +1,4 @@
-// region Componentes Aplicación: prueba base de renderizado
+// #region Aplicacion | Funcionalidad | Prueba base de renderizado
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,4 +19,4 @@ void main() {
     expect(find.text('Cuentas demo'), findsNothing);
   });
 }
-// endregion
+// #endregion

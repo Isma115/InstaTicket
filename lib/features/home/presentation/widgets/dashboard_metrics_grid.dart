@@ -1,8 +1,10 @@
-// region Componentes Dashboard: cuadrícula de métricas principales
+// #region Dashboard | Vista | Importaciones de metricas
 import 'package:flutter/material.dart';
 
 import '../../domain/models/dashboard_models.dart';
+// #endregion
 
+// #region DashboardMetricsGrid | Vista | Cuadricula de metricas principales
 class DashboardMetricsGrid extends StatelessWidget {
   const DashboardMetricsGrid({
     required this.metrics,
@@ -51,9 +53,43 @@ class DashboardMetricsGrid extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: tarjeta de métrica
+// #region Dashboard | Vista | Tarjeta de metrica
+// #endregion
+
+// #region _MetricIcon | Vista | Icono circular de metrica
+class _MetricIcon extends StatelessWidget {
+  const _MetricIcon({
+    required this.metric,
+    required this.size,
+    required this.iconSize,
+  });
+
+  final DashboardMetric metric;
+  final double size;
+  final double iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: metric.iconBackgroundColor,
+      ),
+      child: Icon(
+        metric.icon,
+        color: metric.iconColor,
+        size: iconSize,
+      ),
+    );
+  }
+}
+// #endregion
+
+// #region _MetricCard | Vista | Tarjeta de metrica
 class _MetricCard extends StatelessWidget {
   const _MetricCard({
     required this.metric,
@@ -199,33 +235,4 @@ class _MetricCard extends StatelessWidget {
     );
   }
 }
-
-class _MetricIcon extends StatelessWidget {
-  const _MetricIcon({
-    required this.metric,
-    required this.size,
-    required this.iconSize,
-  });
-
-  final DashboardMetric metric;
-  final double size;
-  final double iconSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: metric.iconBackgroundColor,
-      ),
-      child: Icon(
-        metric.icon,
-        color: metric.iconColor,
-        size: iconSize,
-      ),
-    );
-  }
-}
-// endregion
+// #endregion

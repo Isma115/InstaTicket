@@ -1,9 +1,11 @@
-// region Lógica Backend Frontend: cliente HTTP para API InstaTicket
+// #region ClienteHTTP | Funcionalidad | Importaciones del cliente HTTP
 import 'dart:convert';
 import 'dart:io';
 
 import '../config/app_config.dart';
+// #endregion
 
+// #region ApiException | Funcionalidad | Excepcion personalizada para la API
 class ApiException implements Exception {
   const ApiException(this.message, {this.statusCode});
 
@@ -19,7 +21,9 @@ class ApiException implements Exception {
     return '$message (status: $statusCode)';
   }
 }
+// #endregion
 
+// #region ApiClient | Funcionalidad | Cliente HTTP singleton para llamadas API
 class ApiClient {
   ApiClient._();
 
@@ -151,4 +155,4 @@ class ApiClient {
     return decoded;
   }
 }
-// endregion
+// #endregion

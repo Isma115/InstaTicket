@@ -1,4 +1,4 @@
-// region Componentes Dashboard: imports
+// #region Imports | Vista | Importaciones del panel principal
 import 'package:flutter/material.dart';
 
 import '../../../../core/data/theme_preferences.dart';
@@ -11,9 +11,9 @@ import '../widgets/dashboard_metrics_grid.dart';
 import '../widgets/dashboard_tickets_card.dart';
 import '../widgets/edit_ticket_dialog.dart';
 import '../widgets/ticket_chat_sheet.dart';
-// endregion
+// #endregion
 
-// region Componentes Dashboard: contenedor principal por rol
+// #region RoleHomePage | Vista | Widget del panel principal por rol
 class RoleHomePage extends StatefulWidget {
   const RoleHomePage({
     required this.user,
@@ -25,7 +25,9 @@ class RoleHomePage extends StatefulWidget {
   @override
   State<RoleHomePage> createState() => _RoleHomePageState();
 }
+// #endregion
 
+// #region _RoleHomePageState | Vista | Estado y logica del panel principal
 class _RoleHomePageState extends State<RoleHomePage> {
   final RemoteHomeRepository _repository = RemoteHomeRepository.instance;
 
@@ -851,9 +853,9 @@ class _RoleHomePageState extends State<RoleHomePage> {
     }
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: filtros de tickets
+// #region _TicketFiltersToolbar | Vista | Barra de herramientas de filtros
 class _TicketFiltersToolbar extends StatelessWidget {
   const _TicketFiltersToolbar({
     required this.selectedStatus,
@@ -967,7 +969,9 @@ class _TicketFiltersToolbar extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _TicketFiltersSheet | Vista | Hoja de filtros modal
 class _TicketFiltersSheet extends StatefulWidget {
   const _TicketFiltersSheet({
     required this.statusFilters,
@@ -988,7 +992,9 @@ class _TicketFiltersSheet extends StatefulWidget {
   @override
   State<_TicketFiltersSheet> createState() => _TicketFiltersSheetState();
 }
+// #endregion
 
+// #region _TicketFiltersSheetState | Vista | Estado de la hoja de filtros
 class _TicketFiltersSheetState extends State<_TicketFiltersSheet> {
   late String _localSelectedStatus;
   late String _localSelectedPriority;
@@ -1074,7 +1080,9 @@ class _TicketFiltersSheetState extends State<_TicketFiltersSheet> {
     );
   }
 }
+// #endregion
 
+// #region _FilterGroup | Vista | Grupo de botones de filtro
 class _FilterGroup extends StatelessWidget {
   const _FilterGroup({
     required this.label,
@@ -1145,7 +1153,9 @@ class _FilterGroup extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _ActiveFilterChip | Vista | Chip de filtro activo
 class _ActiveFilterChip extends StatelessWidget {
   const _ActiveFilterChip({
     required this.label,
@@ -1173,9 +1183,9 @@ class _ActiveFilterChip extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: fondo decorativo exterior
+// #region _DashboardBackdrop | Vista | Fondo decorativo exterior
 class _DashboardBackdrop extends StatelessWidget {
   const _DashboardBackdrop({required this.isDark});
 
@@ -1210,7 +1220,9 @@ class _DashboardBackdrop extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _BackdropGlow | Vista | Brillo decorativo de fondo
 class _BackdropGlow extends StatelessWidget {
   const _BackdropGlow({
     required this.size,
@@ -1232,9 +1244,9 @@ class _BackdropGlow extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: barra inferior de navegacion
+// #region _BottomNavigationBar | Vista | Barra inferior de navegacion
 class _BottomNavigationBar extends StatelessWidget {
   const _BottomNavigationBar({
     required this.items,
@@ -1317,9 +1329,9 @@ class _BottomNavigationBar extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: boton flotante de nuevo ticket
+// #region _CreateTicketButton | Vista | Boton flotante de nuevo ticket
 class _CreateTicketButton extends StatelessWidget {
   const _CreateTicketButton({
     required this.onPressed,
@@ -1359,9 +1371,9 @@ class _CreateTicketButton extends StatelessWidget {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: bloques de contenido por pestana
+// #region _DashboardSection | Vista | Seccion de contenido del dashboard
 class _DashboardSection extends StatelessWidget {
   const _DashboardSection({
     required this.title,
@@ -1417,7 +1429,9 @@ class _DashboardSection extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _SupportGroupCard | Vista | Tarjeta de grupo de soporte
 class _SupportGroupCard extends StatelessWidget {
   const _SupportGroupCard({
     required this.group,
@@ -1494,7 +1508,9 @@ class _SupportGroupCard extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _ProfilePanel | Vista | Widget del panel de perfil
 class _ProfilePanel extends StatefulWidget {
   const _ProfilePanel({
     required this.user,
@@ -1509,7 +1525,9 @@ class _ProfilePanel extends StatefulWidget {
   @override
   State<_ProfilePanel> createState() => _ProfilePanelState();
 }
+// #endregion
 
+// #region _ProfilePanelState | Vista | Estado del panel de perfil
 class _ProfilePanelState extends State<_ProfilePanel> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
@@ -1821,9 +1839,9 @@ class _ProfilePanelState extends State<_ProfilePanel> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: panel de ajustes
+// #region _SettingsPanel | Vista | Widget del panel de ajustes
 class _SettingsPanel extends StatefulWidget {
   const _SettingsPanel({
     required this.user,
@@ -1836,7 +1854,9 @@ class _SettingsPanel extends StatefulWidget {
   @override
   State<_SettingsPanel> createState() => _SettingsPanelState();
 }
+// #endregion
 
+// #region _SettingsPanelState | Vista | Estado del panel de ajustes
 class _SettingsPanelState extends State<_SettingsPanel> {
   final ThemePreferences _themePrefs = ThemePreferences.instance;
   bool _largeText = false;
@@ -2172,9 +2192,9 @@ class _SettingsPanelState extends State<_SettingsPanel> {
     );
   }
 }
-// endregion
+// #endregion
 
-// region Componentes Dashboard: utilidades visuales del panel
+// #region _InitialsAvatar | Vista | Avatar de iniciales
 class _InitialsAvatar extends StatelessWidget {
   const _InitialsAvatar({
     required this.name,
@@ -2224,7 +2244,9 @@ class _InitialsAvatar extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _UserProfileAvatar | Vista | Avatar de perfil de usuario
 class _UserProfileAvatar extends StatelessWidget {
   const _UserProfileAvatar({
     required this.name,
@@ -2277,7 +2299,9 @@ class _UserProfileAvatar extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _ProfilePhotoPickerSheet | Vista | Hoja de seleccion de foto
 class _ProfilePhotoPickerSheet extends StatelessWidget {
   const _ProfilePhotoPickerSheet({
     required this.selectedPhotoUrl,
@@ -2377,7 +2401,9 @@ class _ProfilePhotoPickerSheet extends StatelessWidget {
     );
   }
 }
+// #endregion
 
+// #region _ProfilePhotoOption | Vista | Opcion de foto de perfil
 class _ProfilePhotoOption {
   const _ProfilePhotoOption({
     required this.label,
@@ -2410,7 +2436,9 @@ const List<_ProfilePhotoOption> _profilePhotoOptions = <_ProfilePhotoOption>[
     photoUrl: 'https://i.pravatar.cc/300?img=53',
   ),
 ];
+// #endregion
 
+// #region _DashboardTab | Vista | Datos de pestana de navegacion
 class _DashboardTab {
   const _DashboardTab({
     required this.id,
@@ -2430,7 +2458,9 @@ class _DashboardTab {
   final String sectionTitle;
   final String sectionSubtitle;
 }
+// #endregion
 
+// #region _buildTabs | Vista | Constructor de pestanas del dashboard
 List<_DashboardTab> _buildTabs(AuthUser user) {
   return <_DashboardTab>[
     _DashboardTab(
@@ -2481,4 +2511,4 @@ List<_DashboardTab> _buildTabs(AuthUser user) {
     ),
   ];
 }
-// endregion
+// #endregion

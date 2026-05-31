@@ -1,4 +1,4 @@
-// region Lógica Backend Frontend: repositorio remoto de autenticación
+// #region Autenticacion | Funcionalidad | Repositorio remoto de autenticacion
 import '../models/auth_user.dart';
 import '../models/user_role.dart';
 import 'api_client.dart';
@@ -60,4 +60,4 @@ class RemoteAuthRepository {
     );
   }
 }
-// endregion
+// #endregion
